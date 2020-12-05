@@ -1,0 +1,4 @@
+.courseCards {
+    display: flex !important;
+    justify-content: space-evenly !important;
+}
