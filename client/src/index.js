@@ -10,7 +10,8 @@ import { Provider } from 'react-redux';
 const initialState = {};
 const composeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
 
-const Store = createStore(reducers, initialState, compose(applyMiddleware(thunk), composeEnhancer))
+// const Store = createStore(reducers, initialState, compose(applyMiddleware(thunk), composeEnhancer))
+const Store = createStore(reducers, initialState, compose(applyMiddleware(thunk)))
 
 ReactDOM.render(
   <Provider store={Store}>
