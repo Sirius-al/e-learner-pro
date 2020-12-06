@@ -112,7 +112,6 @@ const Course = ({ getCourse, course }) => {
                       <i className="arrow_triangle-right" />
                       <img
                         src="http://via.placeholder.com/800x533/ccc/fff/course_1.jpg"
-                        alt
                         className="img-fluid"
                       />
                       <span>View course preview</span>

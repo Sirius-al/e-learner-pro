@@ -44,7 +44,7 @@ const CourseMaterials = ({ id, uploadfile, submitCourseMaterial, files }) => {
                  />
             <br/>
             <input
-                accept="image/*"
+                accept=".pdf, .docx, .doc"
                 id="contained-button-file"
                 type="file"
                 style={{display: 'none'}}

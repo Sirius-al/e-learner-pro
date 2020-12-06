@@ -106,7 +106,7 @@ const CourseLesson = ({ id, uploadfile, file, submitCourseLessons }) => {
             <QuizPanel value={tab} index={1}/> */}
             <Fragment>
                     <input
-                        accept="image/*"
+                        accept="video/*"
                         id="contained-button-file"
                         type="file"
                         style={{display: 'none'}}
