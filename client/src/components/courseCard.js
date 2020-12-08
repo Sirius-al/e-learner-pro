@@ -26,10 +26,10 @@ const courseCard = ({ course }) => {
             <blockquote className="blockquote">
                 <footer className="blockquote-footer">Course Difficulty <cite title="Source Title"><strong>{`" ${level} "`}</strong></cite></footer>
             </blockquote>
-          <Link to={`/course/${_id}`} className="btn btn-secondary mr-4">View Course</Link>
+          <Link to={`/view-course/${_id}`} className="btn btn-secondary mr-4">View Course</Link>
           <a href="#!" className="btn btn-success"> <strong>Enroll Now ${price}</strong></a>
           </div>
-          <Link to={`add-materials/${_id}`} className="btn btn-info">add course material</Link>
+          <Link to={`edit-course/${_id}`} className="btn btn-info">Edit Course</Link>
         </div>
       </div>
     );

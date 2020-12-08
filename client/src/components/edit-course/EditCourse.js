@@ -1,36 +1,27 @@
 import React, { Fragment, useEffect } from 'react'
-// import "./css/bootstrap.min.css";
-import "./css/style.css";
-import "./css/vendors.css";
-import "./css/icon_fonts/css/all_icons.min.css";
-import "./css/custom.css";
-
-import { connect } from 'react-redux'
-import { Route, useParams } from "react-router-dom";
-
+import { Link, useParams } from 'react-router-dom';
 import { getCourse } from '../../Actions/actions'
-import Lessons from './Lessons'
-import Faq from './Faq';
+import { connect } from 'react-redux'
+import Lessons from '../course/Lessons';
+import Faq from '../course/Faq';
 
+const EditCourse = ({ getCourse, course }) => {
+    const { id } = useParams()
+    
+    useEffect(() => {
+        getCourse(id)
+    }, [])
 
-const Course = ({ getCourse, course }) => {
-
-  const { id } = useParams()
-
-  useEffect(() => {
-    getCourse(id)
-  }, [])
-
-  const { title, teacher, description, discountPerc, requirements, duration, coverImage, level, price, learns, courseMaterials, lessons, faq } = course
-
+    const { title, teacher, description, discountPerc, requirements, duration, coverImage, level, price, learns, courseMaterials, lessons, faq } = course
+    
     return (
-      <main>
+        <main>
         <section id="hero_in" className="courses">
           <div className="wrapper">
             <div className="container">
               <h1 className="fadeInUp">
                 <span />
-                {title}
+                {title ? title : "No title"}
               </h1>
             </div>
           </div>
@@ -57,48 +48,49 @@ const Course = ({ getCourse, course }) => {
                 <section id="description">
                   <h2>Description</h2>
                   <p>
-                    {description}
+                    {!description ? "No description found for this course" : description}
                   </p>
 
+                <h5>What will you learn from this course !</h5>
                   {learns && <Fragment>
-                    <h5>What will you learn</h5>
                     <ul className="list_ok">
-                      {learns.map((learn, i) => {
+                      {learns.length > 0 ? learns.map((learn, i) => {
                         return (<li key={i}>
-                          <h6><strong>{learn.learnTitle}</strong></h6>
+                          <h6>{learn.learnTitle}</h6>
                           <p>
                           {learn.learnDescription}
                           </p>
                         </li>)
-                      })}
+                      }) : "Nothing to Learn"}
                     </ul>
+
                   </Fragment>}
+                  <Link to={`/add-learns/${id}`} className="btn btn-info">Add what students will learn</Link>
 
                   <hr />
-                  {requirements && <Fragment>
                     <p>Requirements</p>
                     <div className="row">
                       <div className="col-lg-12">
                         <ul className="bullets">
-                          {requirements.map((req, i) => {
-                            return <li key={i}>{req}</li>
-                          })}
+                          {requirements && !requirements.length > 0 ? requirements.map((req, i) => {
+                            return <li key={i}>{req}</li>}) : <li> No Requirements </li>}
                         </ul>
                       </div>
                     </div>
-                    </Fragment>}
-
+                    
+                    
                   {/* /row */}
                 </section>
                 {/* /section */}
                 <section id="lessons">
-                  <Lessons duration={duration} courseMaterials={courseMaterials} lessons={lessons}/>
+                    <Lessons id={id} duration={duration} courseMaterials={courseMaterials} lessons={lessons}/>
+                    <Link to={`/add-lessons/${id}`} className="btn btn-info mb-3" style={{width: '40%'}}>Add Lessons and Course materials</Link>
                 </section>
                 <h4><strong>Teacher</strong></h4>
                     <div className="row">
                       <div className="col-lg-12">
                         <ul className="bullets">
-                          <li><h5>{teacher}</h5></li>
+                          <li><h5>{teacher ? teacher : "No teacher"}</h5></li>
                         </ul>
                       </div>
                     </div>
@@ -121,7 +113,7 @@ const Course = ({ getCourse, course }) => {
                     </a>
                   </figure>
                   <div className="price">
-                    ${price}
+                    ${price ? price : 0}
                     <span className="original_price">
                       <em> </em>{discountPerc && discountPerc > 0 ? `${discountPerc}% discount price` : ''}
                     </span>
@@ -160,11 +152,13 @@ const Course = ({ getCourse, course }) => {
                 </div>
               </aside>
               
+            
             </div>
             <div className="row mt-4">
                 <div className="col-lg-8">
                 <h4 className='mb-4'><strong>F.A.Q</strong></h4>
                     {faq && faq.length > 0 ? faq.map((item, i) => <Faq faq={item} key={i} i={i} />) : "No Faq"}
+                    <Link to={`/add-faq/${id}`} className="btn btn-info" style={{width: '40%', display: 'block'}}>Add Faq</Link>
                 </div>
             </div>
             {/* /row */}
@@ -173,11 +167,11 @@ const Course = ({ getCourse, course }) => {
         </div>
         {/* /bg_color_1 */}
       </main>
-    );
+    )
 }
 
 const mapStateToProps = (state) => ({
-  course: state.datas.course
+    course: state.datas.course
 })
 
-export default connect(mapStateToProps, { getCourse })(Course)
+export default connect(mapStateToProps, { getCourse })(EditCourse)

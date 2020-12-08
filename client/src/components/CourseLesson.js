@@ -1,124 +1,69 @@
 import React, { Fragment, useState } from "react";
 import { connect } from 'react-redux'
 
-import { Tab, Tabs } from '@material-ui/core';
-
-import { uploadfile, submitCourseLessons } from '../Actions/actions'
-
 import Button from '@material-ui/core/Button';
 
+import { uploadlessonsVideos, submitCourseLessons } from '../Actions/actions';
 
-const CourseLesson = ({ id, uploadfile, file, submitCourseLessons }) => {
 
-    const [value, setvalue] = useState({lessonTitle: '', lessonFile: {}});
-    const [tab, settab] = useState(0)
+const CourseLesson = ({ id, uploadlessonsVideos, filed, progress, lessonFiles, submitCourseLessons }) => {
 
-      const handleTabChange = (e, val) => {
-        settab(val)
+
+    let newMap = new Map()
+
+    const upload_Lesson = (e) => {
+        
+        setTimeout(() => [...e.target.files].map((file, i) => {
+
+            if (progress === 0) {
+                const formdata = new FormData()
+                formdata.append('file', file)
+    
+                // console.log(file)
+                uploadlessonsVideos(formdata)
+            }
+        }), 1000)
+
     }
-    const uploadLesson = (e) => {
-        const formdata = new FormData()
-        formdata.append('file', e.target.files[0])
-        uploadfile(formdata)
-         
+
+    if (lessonFiles.length > 0) {
+
+        newMap.set('lessonFile', lessonFiles)
+        /* lessonFiles.map((file, i) => {
+            newMap.get('files').push()
+        }); */
     }
+
     const sendData = () => {
-        setvalue({...value, lessonFile: file})
-        submitCourseLessons(id, [{lessonTitle: value.lessonTitle, lessonFile: file}])
-        // console.log([{lessonTitle: value.lessonTitle, lessonFile: file}])
-        setvalue({lessonTitle: '', lessonFile: {}})
+        const newObj = Object.fromEntries(newMap)
+        console.log(newObj)
+        // submitCourseLessons(id, [newObj])
     }
 
-
-   
-    // function LessonPanel({value, index}) {
-
-    //     const panel = () => {
-    //         return (
-    //             <Fragment>
-    //                 <input
-    //                     accept="image/*"
-    //                     id="contained-button-file"
-    //                     type="file"
-    //                     style={{display: 'none'}}
-    //                     name="courseFileName"
-    //                     onChange={e => uploadLesson(e)}
-    //                 />
-    //                 <label htmlFor="contained-button-file">
-    //                     <Button variant="contained" color="primary" component="span">
-    //                         Upload Lesson file
-    //                     </Button>
-    //                 </label>
-    //                 <p style={{display: 'inline-block', marginLeft: "10px"}}> <strong>{"lesson file"}</strong> </p>
-    //             </Fragment>
-    //         )
-    //     }
-
-    //     return (
-    //         <div>
-    //             {value===index && panel()}
-    //         </div>
-    //     )
-    // }
-    // function QuizPanel({value, index}) {
-
-    //     const panel = () => {
-    //         return (
-    //             <Fragment>
-    //                 <input
-    //                     accept="image/*"
-    //                     id="contained-button-file"
-    //                     type="file"
-    //                     style={{display: 'none'}}
-    //                     name="courseFileName"
-    //                     multiple
-    //                 />
-    //                 <label htmlFor="contained-button-file">
-    //                     <Button variant="contained" color="primary" component="span">
-    //                         Upload Quiz file
-    //                     </Button>
-    //                 </label>
-    //                 <p style={{display: 'inline-block', marginLeft: "10px"}}> <strong>{'ok'}</strong> </p>
-    //             </Fragment>
-    //         )
-    //     } 
-
-    //     return (
-    //         <div>
-    //             {value===index && panel()}
-    //         </div>
-    //     )
-    // }
 
   return (
     <div>
       <div className="card mb-4">
         <div className="card-header">Course Lesson </div>
         <div className="card-body">
-            <input type="text" name="courseFileTitle" className="form-control" id="inputZip" placeholder="Course lesson file title" value={value.lessonTitle} onChange={e => setvalue({...value, lessonTitle: e.target.value})}
-                 />
+            <input type="text" name="courseFileTitle" className="form-control" id="inputZip" placeholder="Course lesson file title" onChange={e => newMap.set("lessonTitle", e.target.value || '')} />
             <br/>
-            {/* <Tabs value={tab} onChange={handleTabChange} className="mb-3">
-                <Tab label="lesson"/>
-                <Tab label="Quiz"/>
-            </Tabs>
-            <LessonPanel value={tab} index={0}/>
-            <QuizPanel value={tab} index={1}/> */}
             <Fragment>
                     <input
-                        accept="video/*"
+                        accept="image/*" // video/*
                         id="contained-button-file"
                         type="file"
                         style={{display: 'none'}}
                         name="courseFileName"
-                        onChange={e => uploadLesson(e)}
+                        multiple
+                        onChange={e => upload_Lesson(e)}
                     />
                     <label htmlFor="contained-button-file">
                         <Button variant="contained" color="primary" component="span">
                             Upload Lesson file
                         </Button>
                     </label>
-                    <p style={{display: 'inline-block', marginLeft: "10px"}}> <strong>{file.filename ? file.filename : "lesson file"}</strong> </p>
+                    <p style={{display: 'inline-block', marginLeft: "10px"}}> <strong>{filed.filename ? filed.filename : "lesson file"}</strong> </p>
                 </Fragment>
         </div>
             <Button variant="contained" onClick={() => sendData()} color="secondary" component="span">
@@ -130,7 +75,9 @@ const CourseLesson = ({ id, uploadfile, file, submitCourseLessons }) => {
 };
 
 const mapStateToProps = (state) => ({
-    file: state.datas.data
+    filed: state.datas.data,
+    progress: state.datas.videoUploadingProgress,
+    lessonFiles: state.datas.lessonFiles
 })
 
-export default connect(mapStateToProps, { uploadfile, submitCourseLessons })(CourseLesson);
+export default connect(mapStateToProps, { uploadlessonsVideos, submitCourseLessons })(CourseLesson);

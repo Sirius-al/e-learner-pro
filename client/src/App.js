@@ -7,9 +7,13 @@ import PropTypes from "prop-types";
 import { getAllCourses } from './Actions/actions'
 
 import MainFormPart from './components/MainFormPart'
-import Materials from './components/Materials'
+import AddLearns from './components/edit-course/addLearns'
+// import Materials from './components/Materials'
+// import Materials from './components/Materials'
 import CourseCard from './components/courseCard'
 import Course from './components/course/Course'
+import Main from './components/Dumb Folder/main'
+import EditCourse from './components/edit-course/EditCourse'
 
 
   
@@ -21,12 +25,12 @@ const App = ({ getAllCourses, courses }) => {
     getAllCourses()
   }, [getAllCourses])
 
-  const card = (courses) => {
-    console.log(courses)
-    if (courses) {
-      courses.map(course => <CourseCard course={course}/>)
-    }
-  }
+  // const card = (courses) => {
+  //   console.log(courses)
+  //   if (courses) {
+  //     courses.map(course => <CourseCard course={course}/>)
+  //   }
+  // }
 
   return (
     <BrowserRouter>
@@ -39,8 +43,10 @@ const App = ({ getAllCourses, courses }) => {
         </Route>
 
         <Switch>
-          <Route path='/add-materials/:id' component={Materials}/>
-          <Route path='/course/:id' component={Course}/>
+          <Route path='/add-learns/:id' component={AddLearns}/>
+          <Route path='/view-course/:id' component={Course}/>
+          <Route path='/edit-course/:id' component={EditCourse}/>
+          <Route path='/dumb' component={Main}/>
         </Switch>
         
       </div>

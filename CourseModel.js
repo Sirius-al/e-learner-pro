@@ -46,7 +46,7 @@ const CourseSchema = new mongoose.Schema({
     lessons: [
         {
             lessonTitle: String,
-            lessonFile: Object,
+            lessonFile: Array,
             quiz: Object
         }
     ],

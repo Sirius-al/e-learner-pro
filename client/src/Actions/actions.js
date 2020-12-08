@@ -1,4 +1,4 @@
-import { FILE_UPLOADER, COURSE_BASIC_UPLOADED, GET_ALL_COURSES, COURSE_MATERIAL_UPLOADED, COURSE_LESSONS_UPLOADED, COURSE_FAQ_UPLOADED, GET_COURSE, COURSE_LEARN_UPLOADED, } from './types'
+import { FILE_UPLOADER, COURSE_BASIC_UPLOADED, GET_ALL_COURSES, COURSE_MATERIAL_UPLOADED, COURSE_LESSONS_UPLOADED, COURSE_FAQ_UPLOADED, GET_COURSE, COURSE_LEARN_UPLOADED, LESSON_VIDEO_UPLOADER, LESSON_ERROR, PROGRESS } from './types'
 import backendCall from '../utils/backendCall'
 
 export const uploadfile = (file) => async dispatch => {
@@ -17,6 +17,38 @@ export const uploadfile = (file) => async dispatch => {
         //   type: PROFILE_ERROR,
         //   payload: { msg: error.data.message, status: error.status }
         // })
+        
+    }
+  }
+export let fileUploadProgress = (value) => async dispatch => {
+    dispatch({ type: PROGRESS, payload: value })
+    // console.log(value)
+};
+
+
+export const uploadlessonsVideos = (file) => async dispatch => {
+    try {
+        const res = await backendCall.post('/upload', file, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            },
+            onUploadProgress: (progressEvent) => {
+                let progress = parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total))
+                
+                setTimeout(() => {
+                    dispatch(fileUploadProgress(0))
+                }, 1000)
+
+                dispatch(fileUploadProgress(progress))
+            }
+        })
+        console.log(res.data)
+        dispatch({ type: LESSON_VIDEO_UPLOADER, payload: res.data })
+    } catch (err) {
+        dispatch({ type: LESSON_ERROR })
+        // const error = err.response
+        console.error(err)
+        
         
     }
   }

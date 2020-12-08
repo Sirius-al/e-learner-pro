@@ -16,17 +16,17 @@ const Materials = () => {
     return (
         <div>
 
-        <h3 className="text-center text-dark text-uppercase"><strong>What Students will learn from this course</strong></h3>
+        {/* <h3 className="text-center text-dark text-uppercase"><strong>What Students will learn from this course</strong></h3>
         <CourseLearn id={id}/>
         <br/>
         <h3 className="text-center text-dark text-uppercase"><strong>Course Materials</strong></h3>
         <CourseMaterial id={id}/>
-        <br/>
+        <br/> */}
         <h3 className="text-center text-dark text-uppercase"><strong>Course lessons</strong></h3>
         <CourseLesson id={id}/>
         <br/>
-        <h3 className="text-center text-dark text-uppercase"><strong>Course Faqs</strong></h3>
-        <CourseFaq id={id}/>
+        {/* <h3 className="text-center text-dark text-uppercase"><strong>Course Faqs</strong></h3>
+        <CourseFaq id={id}/> */}
 
         {/* <Button
         className="mb-5"

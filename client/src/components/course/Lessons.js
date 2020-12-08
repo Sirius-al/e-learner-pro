@@ -1,8 +1,9 @@
 import React, { Fragment } from "react";
+import { Link } from "react-router-dom";
 
-const Lessons = ({ duration, courseMaterials, lessons }) => {
+const Lessons = ({ id, duration, courseMaterials, lessons }) => {
   return (
-    <section id="lessons">
+    <Fragment>
       <div className="intro_title">
         <h2>Lessons</h2>
         <ul>
@@ -93,10 +94,11 @@ const Lessons = ({ duration, courseMaterials, lessons }) => {
               </div>
             ))}
             </Fragment>}
+            
         {/* /card */}
       </div>
       {/* /accordion */}
-    </section>
+    </Fragment>
   );
 };
 
