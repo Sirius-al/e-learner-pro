@@ -6,7 +6,7 @@ import "./css/icon_fonts/css/all_icons.min.css";
 import "./css/custom.css";
 
 import { connect } from 'react-redux'
-import { Route, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { getCourse } from '../../Actions/actions'
 import Lessons from './Lessons'
@@ -110,7 +110,7 @@ const Course = ({ getCourse, course }) => {
                   <figure>
                     <a
                       href="https://www.youtube.com/watch?v=LDgd_gUcqCw"
-                      className="video"
+                      className="video" target="blank"
                     >
                       <i className="arrow_triangle-right" />
                       <img

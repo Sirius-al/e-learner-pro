@@ -5,10 +5,8 @@ import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
-import Materials from '../components/Materials';
 
 import { submitCourseBasics, uploadfile } from '../Actions/actions'
-import { Link } from 'react-router-dom';
 
 
 const MainFormPart = ({ submitCourseBasics, course, uploadfile, files }) => {

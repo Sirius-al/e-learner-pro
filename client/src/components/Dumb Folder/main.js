@@ -1,12 +1,21 @@
 import React from 'react'
-import MainComp from './MainComp'
+import Modal from '../Modal'
 
 const Main = () => {
     return (
-        <div>
-            <MainComp />
-        </div>
-    )
+      <div>
+        <button
+          type="button"
+          className="btn btn-primary"
+          data-toggle="modal"
+          data-target=".bd-example-modal-lg"
+        >
+          Launch demo modal
+        </button>
+
+        <Modal />
+      </div>
+    );
 }
 
 export default Main

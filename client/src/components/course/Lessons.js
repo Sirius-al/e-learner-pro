@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { Link } from "react-router-dom";
+import Modal from '../Modal'
 
 const Lessons = ({ id, duration, courseMaterials, lessons }) => {
   return (
@@ -39,7 +39,7 @@ const Lessons = ({ id, duration, courseMaterials, lessons }) => {
                         {courseMaterials.map((mat, i) => (
                             <li key={i}>
                                 <p className="mb-1"><strong><u>{mat.courseFileTitle}</u></strong></p>
-                                <a href="#!" className="txt_doc">
+                                <a href="#!" className="txt_doc" >
                                     {mat.courseFile && mat.courseFile.filename}
                                 </a>
                             </li>
@@ -79,14 +79,15 @@ const Lessons = ({ id, duration, courseMaterials, lessons }) => {
                   <div className="card-body">
                     <div className="list_lessons">
                       <ul>
-                        <li>
-                          <a
-                            href="https://www.youtube.com/watch?v=LDgd_gUcqCw"
-                            className="video"
-                          >
-                            {lesson.lessonFile.filename}
-                          </a>
-                        </li>
+                      { lesson.lessonFile && lesson.lessonFile.length > 0 && lesson.lessonFile.map((file, i) => (
+                            <li key={i}>
+                                <a href="#!" data-toggle="modal" data-target=".bd-example-modal-lg" //? file.filepath
+                                className="video" >
+                                    { file.filename }
+                                </a>
+                                <Modal videolink={file.filepath && file.filepath} />
+                            </li>
+                          ))}
                       </ul>
                     </div>
                   </div>
@@ -98,6 +99,7 @@ const Lessons = ({ id, duration, courseMaterials, lessons }) => {
         {/* /card */}
       </div>
       {/* /accordion */}
+      
     </Fragment>
   );
 };

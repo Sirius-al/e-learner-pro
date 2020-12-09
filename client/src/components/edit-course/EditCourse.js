@@ -72,7 +72,7 @@ const EditCourse = ({ getCourse, course }) => {
                     <div className="row">
                       <div className="col-lg-12">
                         <ul className="bullets">
-                          {requirements && !requirements.length > 0 ? requirements.map((req, i) => {
+                          {requirements && requirements.length > 0 ? requirements.map((req, i) => {
                             return <li key={i}>{req}</li>}) : <li> No Requirements </li>}
                         </ul>
                       </div>
