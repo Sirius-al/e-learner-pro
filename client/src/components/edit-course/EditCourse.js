@@ -56,7 +56,7 @@ const EditCourse = ({ getCourse, course }) => {
                     <ul className="list_ok">
                       {learns.length > 0 ? learns.map((learn, i) => {
                         return (<li key={i}>
-                          <h6>{learn.learnTitle}</h6>
+                          <h6 style={{fontWeight: 'bold'}}>{learn.learnTitle}</h6>
                           <p>
                           {learn.learnDescription}
                           </p>

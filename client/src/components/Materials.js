@@ -3,10 +3,10 @@ import Button from '@material-ui/core/Button';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import { v4 } from 'uuid'
 import { useParams } from 'react-router-dom';
-import CourseMaterial from './courseMaterials'
-import CourseLesson from './CourseLesson'
-import CourseFaq from './CourseFaq'
-import CourseLearn from './CourseLearn'
+// import CourseMaterial from './courseMaterials'
+// import CourseLesson from './CourseLesson'
+// import CourseFaq from './CourseFaq'
+// import CourseLearn from './CourseLearn'
 
 const Materials = () => {
 
@@ -22,8 +22,8 @@ const Materials = () => {
         <h3 className="text-center text-dark text-uppercase"><strong>Course Materials</strong></h3>
         <CourseMaterial id={id}/>
         <br/> */}
-        <h3 className="text-center text-dark text-uppercase"><strong>Course lessons</strong></h3>
-        <CourseLesson id={id}/>
+        {/* <h3 className="text-center text-dark text-uppercase"><strong>Course lessons</strong></h3>
+        <CourseLesson id={id}/> */}
         <br/>
         {/* <h3 className="text-center text-dark text-uppercase"><strong>Course Faqs</strong></h3>
         <CourseFaq id={id}/> */}

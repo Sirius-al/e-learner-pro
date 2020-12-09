@@ -40,7 +40,7 @@ const Lessons = ({ id, duration, courseMaterials, lessons }) => {
                             <li key={i}>
                                 <p className="mb-1"><strong><u>{mat.courseFileTitle}</u></strong></p>
                                 <a href="#!" className="txt_doc">
-                                    {mat.courseFile.filename}
+                                    {mat.courseFile && mat.courseFile.filename}
                                 </a>
                             </li>
                         ))}

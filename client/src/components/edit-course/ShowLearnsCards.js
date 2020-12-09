@@ -5,8 +5,8 @@ const ShowLearnsCards = ({ learn }) => {
     <section id="description">
       <ul className="list_ok">
         <li >
-          <h6>
-            <strong>{learn.learnTitle}</strong>
+          <h6 style={{fontWeight: '800', fontSize: '25px'}}>
+            {learn.learnTitle}
           </h6>
           <p>{learn.learnDescription}</p>
         </li>

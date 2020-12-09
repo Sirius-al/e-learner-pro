@@ -1,11 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { connect } from 'react-redux'
+import { useParams } from 'react-router-dom';
 
-import { submitCoursefaq } from '../Actions/actions'
+import { submitCoursefaq, getCourse } from '../../Actions/actions'
+import Faq from '../course/Faq';
 
 import Button from '@material-ui/core/Button';
 
-const CourseFaq = ({ id, submitCoursefaq }) => {
+
+
+
+const AddFaq = ({ getCourse, submitCoursefaq, course: { faq } }) => {
+
+    const { id } = useParams()
+
+    useEffect(() => {
+      getCourse(id)
+    }, [])
+
 
     const [value, setvalue] = useState({question: '', answer: ''})
     
@@ -35,8 +47,15 @@ const CourseFaq = ({ id, submitCoursefaq }) => {
                 submit course Faq
             </Button>
       </div>
+      <br/>
+      {faq && faq.length > 0 ? faq.map(faq => <Faq faq={faq} />) : "No Faq(s) found, Create one ^"}
+      
     </div>
   );
 };
 
-export default connect(null, { submitCoursefaq })(CourseFaq);
+const mapStateToProps = (state) => ({
+  course: state.datas.course
+})
+
+export default connect(mapStateToProps, { submitCoursefaq, getCourse })(AddFaq);

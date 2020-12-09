@@ -1,6 +1,7 @@
-import { FILE_UPLOADER, COURSE_BASIC_UPLOADED, GET_ALL_COURSES, GET_COURSE, LESSON_VIDEO_UPLOADER, PROGRESS } from '../Actions/types'
+import { FILE_UPLOADER, COURSE_BASIC_UPLOADED, GET_ALL_COURSES, GET_COURSE, LESSON_VIDEO_UPLOADER, PROGRESS, MATERIAL_FILE_UPLOADER } from '../Actions/types'
 const INITIAL_STATE = {
     data: {},
+    material_files: {},
     videoUploadingProgress: 0,
     lessonFiles: [],
     course: {},
@@ -14,6 +15,8 @@ export default function (state = INITIAL_STATE, action) {
     switch (type) {
         case FILE_UPLOADER:
             return {...state, data: payload};
+        case MATERIAL_FILE_UPLOADER:
+            return {...state, material_files: payload};
         case PROGRESS:
             return {...state, videoUploadingProgress: payload};
         case LESSON_VIDEO_UPLOADER:

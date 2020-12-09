@@ -3,26 +3,26 @@ import { connect } from 'react-redux'
 
 import Button from '@material-ui/core/Button';
 
-import { uploadlessonsVideos, submitCourseLessons } from '../Actions/actions';
+import { uploadlessonsVideos, submitCourseLessons } from '../../../Actions/actions';
 
 
-const CourseLesson = ({ id, uploadlessonsVideos, filed, progress, lessonFiles, submitCourseLessons }) => {
+const Addlessons = ({ id, uploadlessonsVideos, progress, lessonFiles, submitCourseLessons }) => {
 
 
     let newMap = new Map()
 
     const upload_Lesson = (e) => {
         
-        setTimeout(() => [...e.target.files].map((file, i) => {
+        [...e.target.files].map((file, i) => {
 
             if (progress === 0) {
                 const formdata = new FormData()
                 formdata.append('file', file)
     
                 // console.log(file)
-                uploadlessonsVideos(formdata)
+                return uploadlessonsVideos(formdata)
             }
-        }), 1000)
+        })
 
     }
 
@@ -36,8 +36,8 @@ const CourseLesson = ({ id, uploadlessonsVideos, filed, progress, lessonFiles, s
 
     const sendData = () => {
         const newObj = Object.fromEntries(newMap)
-        console.log(newObj)
-        // submitCourseLessons(id, [newObj])
+        // console.log(newObj)
+        submitCourseLessons(id, [newObj])
     }
 
 
@@ -50,21 +50,35 @@ const CourseLesson = ({ id, uploadlessonsVideos, filed, progress, lessonFiles, s
             <br/>
             <Fragment>
                     <input
-                        accept="image/*" // video/*
-                        id="contained-button-file"
+                        accept=".mp4, .wav" // video/*
+                        id="lesson-file-upload"
                         type="file"
                         style={{display: 'none'}}
                         name="courseFileName"
                         multiple
+                        disabled={progress > 0}
                         onChange={e => upload_Lesson(e)}
                     />
-                    <label htmlFor="contained-button-file">
-                        <Button variant="contained" color="primary" component="span">
+                    <blockquote className="blockquote">
+                        <footer style={{backgroundColor: 'white'}} className="blockquote-footer">If You have Multiple videos to upload -- <cite title="Source Title"> Upload them one after another, </cite> click (submit course lesson) when you are done</footer>
+                    </blockquote>
+
+                    <label htmlFor="lesson-file-upload" >
+                        <Button disabled={progress > 0} variant="contained" color="primary" component="span">
                             Upload Lesson file
                         </Button>
                     </label>
-                    <p style={{display: 'inline-block', marginLeft: "10px"}}> <strong>{filed.filename ? filed.filename : "lesson file"}</strong> </p>
+                    <p style={{display: 'block', marginTop: "10px"}}> <strong style={{overflowX: 'clip'}} >{lessonFiles && lessonFiles.length > 0 ? `Uploaded Files ==> ${lessonFiles.map(file => file.filename).join(', ')}` : "lesson file"}</strong> </p>
                 </Fragment>
+
+                {progress && progress > 0 ? (<Fragment>
+                    <p className="text-center font-weight-bold">Uploading Video...</p>
+                    <div className="progress">
+                        <div className="progress-bar" role="progressbar" style={{width: progress+'%'}}  aria-valuemax={100}>{progress}%</div>
+                    </div>
+                </Fragment>) : ''}
+
+
         </div>
             <Button variant="contained" onClick={() => sendData()} color="secondary" component="span">
                 submit course lesson
@@ -80,4 +94,4 @@ const mapStateToProps = (state) => ({
     lessonFiles: state.datas.lessonFiles
 })
 
-export default connect(mapStateToProps, { uploadlessonsVideos, submitCourseLessons })(CourseLesson);
+export default connect(mapStateToProps, { uploadlessonsVideos, submitCourseLessons })(Addlessons);

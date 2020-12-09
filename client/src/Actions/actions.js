@@ -1,4 +1,4 @@
-import { FILE_UPLOADER, COURSE_BASIC_UPLOADED, GET_ALL_COURSES, COURSE_MATERIAL_UPLOADED, COURSE_LESSONS_UPLOADED, COURSE_FAQ_UPLOADED, GET_COURSE, COURSE_LEARN_UPLOADED, LESSON_VIDEO_UPLOADER, LESSON_ERROR, PROGRESS } from './types'
+import { FILE_UPLOADER, COURSE_BASIC_UPLOADED, GET_ALL_COURSES, COURSE_MATERIAL_UPLOADED, COURSE_LESSONS_UPLOADED, COURSE_FAQ_UPLOADED, GET_COURSE, COURSE_LEARN_UPLOADED, LESSON_VIDEO_UPLOADER, LESSON_ERROR, PROGRESS, MATERIAL_FILE_UPLOADER } from './types'
 import backendCall from '../utils/backendCall'
 
 export const uploadfile = (file) => async dispatch => {
@@ -20,6 +20,21 @@ export const uploadfile = (file) => async dispatch => {
         
     }
   }
+export const uploadMaterialfiles = (file) => async dispatch => {
+    try {
+        const res = await backendCall.post('/upload', file, {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        })
+        dispatch({ type: MATERIAL_FILE_UPLOADER, payload: res.data })
+        console.log(res.data)
+    } catch (err) {
+        const error = err.response
+        console.error(error)
+        
+    }
+  }
 export let fileUploadProgress = (value) => async dispatch => {
     dispatch({ type: PROGRESS, payload: value })
     // console.log(value)
@@ -35,15 +50,17 @@ export const uploadlessonsVideos = (file) => async dispatch => {
             onUploadProgress: (progressEvent) => {
                 let progress = parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total))
                 
-                setTimeout(() => {
-                    dispatch(fileUploadProgress(0))
-                }, 1000)
+                if (progress === 100) {
+                    setTimeout(() => {
+                        dispatch(fileUploadProgress(0))
+                    }, 2000)
+                }
 
                 dispatch(fileUploadProgress(progress))
             }
         })
-        console.log(res.data)
         dispatch({ type: LESSON_VIDEO_UPLOADER, payload: res.data })
+        console.log(res.data)
     } catch (err) {
         dispatch({ type: LESSON_ERROR })
         // const error = err.response
@@ -83,6 +100,7 @@ export const submitCourseMaterial = (id, data) => async dispatch => {
             }
         })
         dispatch({ type: COURSE_MATERIAL_UPLOADED, payload: res.data })
+        dispatch(getCourse(id))
         // console.log(res.data)
         
     } catch (err) {
@@ -105,6 +123,7 @@ export const submitCourseLessons = (id, data) => async dispatch => {
             }
         })
         dispatch({ type: COURSE_LESSONS_UPLOADED, payload: res.data })
+        dispatch(getCourse(id))
         // console.log(res.data)
   
     } catch (err) {
@@ -125,7 +144,7 @@ export const submitCoursefaq = (id, data) => async dispatch => {
                 "Content-Type": "application/json"
             }
         })
-        dispatch({ type: COURSE_FAQ_UPLOADED, payload: res.data })
+        dispatch(getCourse(id))
         // console.log(res.data)
   
     } catch (err) {
@@ -147,6 +166,7 @@ export const submitCourseLearn = (id, data) => async dispatch => {
             }
         }) 
         dispatch({ type: COURSE_LEARN_UPLOADED, payload: res.data })
+        dispatch(getCourse(id))
         // console.log(res.data)
   
     } catch (err) {

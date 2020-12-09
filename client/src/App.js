@@ -8,8 +8,8 @@ import { getAllCourses } from './Actions/actions'
 
 import MainFormPart from './components/MainFormPart'
 import AddLearns from './components/edit-course/addLearns'
-// import Materials from './components/Materials'
-// import Materials from './components/Materials'
+import AddFaq from './components/edit-course/AddFaq'
+import AddLessonsAndMaterials from './components/edit-course/addLessonsAndMaterials'
 import CourseCard from './components/courseCard'
 import Course from './components/course/Course'
 import Main from './components/Dumb Folder/main'
@@ -44,6 +44,8 @@ const App = ({ getAllCourses, courses }) => {
 
         <Switch>
           <Route path='/add-learns/:id' component={AddLearns}/>
+          <Route path='/add-lessons/:id' component={AddLessonsAndMaterials}/>
+          <Route path='/add-faq/:id' component={AddFaq}/>
           <Route path='/view-course/:id' component={Course}/>
           <Route path='/edit-course/:id' component={EditCourse}/>
           <Route path='/dumb' component={Main}/>

@@ -12,7 +12,10 @@ const app = express();
 const Port = process.env.PORT || 5000
 
 app.use(express.json())
-app.use(fileupload())
+app.use(fileupload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/"
+}))
 
 dotenv.config({
     path: path.resolve(__dirname, '.env')
@@ -42,6 +45,8 @@ var corsOptions = {
 }
 
 app.use(cors(corsOptions))
+
+
 
 app.post('/upload', (req, res) => {
     if (res.files === null) {
