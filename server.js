@@ -57,7 +57,7 @@ app.post('/upload', (req, res) => {
 
     console.log(file)
 
-    file.mv(`${__dirname}/client/public/uploads/${file.name}`, (err) => {
+    file.mv(`${__dirname}/client/src/FILES/${file.name}`, (err) => {
         if (err) {
             console.error(err)
             return res.status(500).send(err)
@@ -65,7 +65,7 @@ app.post('/upload', (req, res) => {
 
         res.status(200).json({
             filename: file.name,
-            filepath: `uploads/${file.name}`
+            filepath: `FILES/${file.name}`
         })
     })
 });
