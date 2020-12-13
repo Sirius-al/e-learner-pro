@@ -12,18 +12,24 @@ const Addlessons = ({ id, uploadlessonsVideos, progress, lessonFiles, submitCour
     let newMap = new Map()
 
     const upload_Lesson = (e) => {
-        
-        [...e.target.files].map((file, i) => {
 
-            if (progress === 0) {
-                const formdata = new FormData()
-                formdata.append('file', file)
+        function fnc(f) {
+            const formdata = new FormData()
+                formdata.append('file', f)
 
                 // console.log(file)
-                // const objectURL = URL.createObjectURL(file)
+                //! const objectURL = URL.createObjectURL(file)
                 // console.log(objectURL)
                 return uploadlessonsVideos(formdata)
+        }
+
+        [...e.target.files].map((file, i) => {
+
+
+            if (progress === 0) {
+                fnc(file)
             }
+            // console.log(file)
         })
 
     }

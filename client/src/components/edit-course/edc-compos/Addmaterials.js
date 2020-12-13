@@ -1,71 +1,94 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { connect } from 'react-redux'
 
 import { uploadMaterialfiles, submitCourseMaterial } from '../../../Actions/actions'
 
 import Button from '@material-ui/core/Button';
 
-const AddMaterials = ({ id, uploadMaterialfiles, submitCourseMaterial, files }) => {
+const AddMaterials = ({ id, uploadMaterialfiles, materialFiles, m_progress, submitCourseMaterial, files }) => {
 
-    const [value, setvalue] = useState({courseFileTitle: '', courseFile: {}})
-    const [file, setfile] = useState()
+    const [value, setvalue] = useState('')
 
+    let newMap = new Map();
 
     const inputtedFile = (e) => {
         
-        // console.log(e.target.files)
-        setvalue({...value, courseFileName: e.target.files[0].name})
-        // setfile(e.target.files[0])
-        const formdata = new FormData()
-        formdata.append('file', e.target.files[0])
-        uploadMaterialfiles(formdata)
+        function fnc(f) {
+            const formdata = new FormData()
+                formdata.append('file', f)
 
-    }
-    const inputtedData = (e) => {
-        
+                // console.log(file)
+                //! const objectURL = URL.createObjectURL(file)
+                // console.log(objectURL)
+                return uploadMaterialfiles(formdata)
+        }
+
+
+        [...e.target.files].map((file, i) => {
+
+
+            if (m_progress === 0) {
+                fnc(file)
+            }
+            // console.log(file)
+        })
         // console.log(e)
-        setvalue({...value, courseFileTitle: e.target.value})
+        // setvalue({...value, courseFileTitle: e.target.value})
+}
 
+    if (materialFiles.length > 0) {
+        newMap.set('courseFile', materialFiles)
+    }
+
+    function titleHandler(e) {
+
+        newMap.set('courseFileTitle', e.target.value || '')
+        setvalue(e.target.value)
     }
 
     const sendData = (e) => {
         e.preventDefault()
-        setfile(files)
-        submitCourseMaterial(id, [{ courseFileTitle: value.courseFileTitle, courseFile: files }])
-        // console.log(id, [{ courseFileTitle: value.courseFileTitle, courseFile: files }])
 
+        const newObj = Object.fromEntries(newMap)
+        submitCourseMaterial(id, [newObj])
 
-        setTimeout(() => {
-            setvalue({...value, courseFileTitle: '', courseFile: {}})
-        }, 2000)
+        setvalue('')
+        // console.log(id, [newObj])
     }
    
   return (
     <div>
       <div className="card mb-4">
         <div className="card-header">Course Material </div>
-        <div className="card-body">
-            <input type="text" name="courseFileTitle" className="form-control" id="inputZip" placeholder="Course material file title" value={value.courseFileTitle} onChange={e => inputtedData(e)}
-                 />
-            <br/>
-            <input
-                accept=".pdf, .docx, .doc"
-                id="contained-button-file"
-                type="file"
-                style={{display: 'none'}}
-                name="courseFileName"
-                onChange={inputtedFile}
-            />
-            <blockquote className="blockquote">
-                <footer style={{backgroundColor: 'white'}} className="blockquote-footer">Upload file ( .pdf, .docx, .doc )</footer>
-            </blockquote>
-            <label htmlFor="contained-button-file">
-                <Button variant="contained" color="primary" component="span">
-                    Upload file
-                </Button>
-            </label>
-                <p style={{display: 'inline-block', marginLeft: "10px"}}> <strong>{files.filename ? files.filename : "Course material file"}</strong> </p>
-        </div>
+            <div className="card-body">
+                <input type="text" name="courseFileTitle" className="form-control" id="inputZip" placeholder="Course material file title" value={value} onChange={e => titleHandler(e)}
+                    />
+                <br/>
+                <input
+                    accept=".pdf, .docx, .doc"
+                    id="contained-button-file"
+                    type="file"
+                    style={{display: 'none'}}
+                    name="courseFileName"
+                    multiple
+                    onChange={inputtedFile}
+                />
+                <blockquote className="blockquote">
+                    <footer style={{backgroundColor: 'white'}} className="blockquote-footer">Upload file ( .pdf, .docx, .doc )</footer>
+                </blockquote>
+                <label htmlFor="contained-button-file">
+                    <Button variant="contained" color="primary" component="span">
+                        Upload file
+                    </Button>
+                </label>
+                <p style={{display: 'block', marginTop: "10px", marginBottom: "5px"}}> <strong style={{overflowX: 'clip'}} >{materialFiles && materialFiles.length > 0 ? `Uploaded Files ==> ${materialFiles.map(file => file.filename).join(', ')}` : "Course material file"}</strong> </p>
+            </div>
+            {m_progress && m_progress > 0 ? (<Fragment>
+                    <p className="text-center font-weight-bold">Uploading materials...</p>
+                    <div className="progress mb-3">
+                        <div className="progress-bar" role="progressbar" style={{width: m_progress+'%'}}  aria-valuemax={100}>{m_progress}%</div>
+                    </div>
+                </Fragment>) : ''}
             <Button variant="contained" onClick={(e) => sendData(e)} color="secondary" component="span">
                 submit course material
             </Button>
@@ -75,6 +98,8 @@ const AddMaterials = ({ id, uploadMaterialfiles, submitCourseMaterial, files }) 
 };
 
 const mapStateToProps = (state) => ({
+    m_progress: state.datas.materialsUploadingProgress,
+    materialFiles: state.datas.material_files,
     files: state.datas.material_files
 })
 

@@ -60,10 +60,12 @@ const AddLessonsAndMaterials = ({ getCourse, course }) => {
                                 <ul>
                                     {courseMaterials.map((mat, i) => (
                                         <li key={i}>
-                                            <p className="mb-1"><strong><u>{mat?.courseFileTitle}</u></strong></p>
-                                            <a href="#!" className="txt_doc">
-                                                {mat.courseFile && mat.courseFile.filename}
-                                            </a>
+                                            <p className="mb-1"><strong><u>{mat.courseFileTitle ? mat.courseFileTitle : "No material title found"}</u></strong></p>
+                                            {mat.courseFile && mat.courseFile.map((file, i) => (
+                                            <a href="#!" onClick={() => {file.filepath && window.open(`/${file.filepath}`)}} className="txt_doc d-block mb-2">
+                                                {`${i+1}. ${file.filename}`}
+                                            </a>))}
+                                            
                                         </li>
                                     ))}
                                 </ul>

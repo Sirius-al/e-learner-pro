@@ -37,14 +37,16 @@ const Lessons = ({ id, duration, courseMaterials, lessons }) => {
                   <div className="card-body">
                     <div className="list_lessons">
                       <ul>
-                        {courseMaterials.map((mat, i) => (
-                            <li key={i}>
-                                <p className="mb-1"><strong><u>{mat.courseFileTitle}</u></strong></p>
-                                <a href="#!" onClick={() => {mat.courseFile && window.open(`/${mat.courseFile.filepath}`)}} className="txt_doc" >
-                                    {mat.courseFile && mat.courseFile.filename}
-                                </a>
-                            </li>
-                        ))}
+                      {courseMaterials.map((mat, i) => (
+                          <li key={i}>
+                              <p className="mb-1"><strong><u>{mat.courseFileTitle ? mat.courseFileTitle : "No material title found"}</u></strong></p>
+                              {mat.courseFile && mat.courseFile.map((file, i) => (
+                              <a href="#!" key={i} onClick={() => {file.filepath && window.open(`/${file.filepath}`)}} className="txt_doc d-block mb-2">
+                                  {`${i+1}. ${file.filename}`}
+                              </a>))}
+                              
+                          </li>
+                      ))}
                       </ul>
                     </div>
                   </div>
@@ -66,7 +68,7 @@ const Lessons = ({ id, duration, courseMaterials, lessons }) => {
                       aria-expanded="false"
                       aria-controls={`collapseOne${i}`}
                     >
-                      <i className="indicator ti-plus" /> {lesson.lessonTitle}
+                      <i className="indicator ti-plus" /> {lesson.lessonTitle ? `${i+1}. ${lesson.lessonTitle}` : 'No lesson\'s title'}
                     </a>
                   </h5>
                 </div>
@@ -85,7 +87,6 @@ const Lessons = ({ id, duration, courseMaterials, lessons }) => {
                                 <Link to={`/view-lesson/${file.filepath}`} data-toggle="modal" data-target=".bd-example-modal-lg" //? file.filepath
                                 className="video" >
                                     { file.filename }
-                                
                                 </Link>
                             </li>
                           ))}

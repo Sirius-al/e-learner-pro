@@ -1,6 +1,7 @@
-import { FILE_UPLOADER, COURSE_BASIC_UPLOADED, GET_ALL_COURSES, COURSE_MATERIAL_UPLOADED, COURSE_LESSONS_UPLOADED, COURSE_FAQ_UPLOADED, GET_COURSE, COURSE_LEARN_UPLOADED, LESSON_VIDEO_UPLOADER, LESSON_ERROR, PROGRESS, MATERIAL_FILE_UPLOADER, SET_ALERT, REMOVE_ALERT, CERIFICATE_IMAGE_UPLOADED } from './types'
+import { FILE_UPLOADER, COURSE_BASIC_UPLOADED, GET_ALL_COURSES, COURSE_MATERIAL_UPLOADED, COURSE_LESSONS_UPLOADED, COURSE_FAQ_UPLOADED, GET_COURSE, COURSE_LEARN_UPLOADED, LESSON_VIDEO_UPLOADER, LESSON_ERROR, PROGRESS, PROGRESS2, MATERIAL_FILE_UPLOADER, SET_ALERT, REMOVE_ALERT, CERIFICATE_IMAGE_UPLOADED } from './types'
 import backendCall from '../utils/backendCall'
 import { v4 } from 'uuid'
+import axios from 'axios'
 
 export const SetAlert = (type, message, timeout=3000) => async dispatch => {
     const id = v4();
@@ -41,7 +42,7 @@ export const uploadCoverImage = (file) => async dispatch => {
             headers: {
                 "Content-Type": "multipart/form-data"
             }
-        })
+        }) 
         dispatch({ type: FILE_UPLOADER, payload: res.data })
         dispatch(SetAlert('success', "Cover Image Uploaded !"))
         console.log(res.data)
@@ -68,7 +69,7 @@ export const uploadCertificateImage = (file) => async dispatch => {
         dispatch(SetAlert('success', "Certificate Image Uploaded !"))
         console.log(res.data)
     } catch (err) {
-        dispatch(SetAlert('danger', "Image Uploading failed, PLease Try again !"))
+        dispatch(SetAlert('danger', "Certificate Image Uploading failed, PLease Try again !"))
         const error = err.response
         console.error(error)
         // dispatch({
@@ -78,11 +79,22 @@ export const uploadCertificateImage = (file) => async dispatch => {
         
     }
   }
-export const uploadMaterialfiles = (file) => async dispatch => {
+export const uploadMaterialfiles = (file, ) => async dispatch => {
     try {
         const res = await backendCall.post('/upload', file, {
             headers: {
                 "Content-Type": "multipart/form-data"
+            },
+            onUploadProgress: (progressEvent) => {
+                let progress = parseInt(Math.round((progressEvent.loaded * 100) / progressEvent.total))
+                
+                if (progress === 100) {
+                    setTimeout(() => {
+                        dispatch(fileUploadProgress(0, PROGRESS2))
+                    }, 2000)
+                }
+
+                dispatch(fileUploadProgress(progress, PROGRESS2))
             }
         })
         dispatch({ type: MATERIAL_FILE_UPLOADER, payload: res.data })
@@ -95,8 +107,9 @@ export const uploadMaterialfiles = (file) => async dispatch => {
         
     }
   }
-export let fileUploadProgress = (value) => async dispatch => {
-    dispatch({ type: PROGRESS, payload: value })
+export let fileUploadProgress = (value, prog_type) => async dispatch => {
+    const type = prog_type
+    dispatch({ type, payload: value })
     // console.log(value)
 };
 
@@ -112,11 +125,11 @@ export const uploadlessonsVideos = (file) => async dispatch => {
                 
                 if (progress === 100) {
                     setTimeout(() => {
-                        dispatch(fileUploadProgress(0))
+                        dispatch(fileUploadProgress(0, PROGRESS))
                     }, 2000)
                 }
 
-                dispatch(fileUploadProgress(progress))
+                dispatch(fileUploadProgress(progress, PROGRESS))
             }
         })
         dispatch({ type: LESSON_VIDEO_UPLOADER, payload: res.data })
