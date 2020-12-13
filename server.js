@@ -57,7 +57,7 @@ app.post('/upload/certificate-image', (req, res) => {
 
     console.log(file)
 
-    file.mv(`${__dirname}/build/certificateImage/${file.name}`, (err) => {
+    file.mv(`${__dirname}/client/build/certificateImage/${file.name}`, (err) => {
         if (err) {
             console.error(err)
             return res.status(500).send(err)
@@ -79,7 +79,7 @@ app.post('/upload/coverimage', (req, res) => {
 
     console.log(file)
 
-    file.mv(`${__dirname}/build/FILES/coverimages/${file.name}`, (err) => {
+    file.mv(`${__dirname}/client/build/FILES/coverimages/${file.name}`, (err) => {
         if (err) {
             console.error(err)
             return res.status(500).send(err)
@@ -102,7 +102,7 @@ app.post('/upload', (req, res) => {
 
     console.log(file)
 
-    file.mv(`${__dirname}/build/FILES/${file.name}`, (err) => {
+    file.mv(`${__dirname}/client/build/FILES/${file.name}`, (err) => {
         if (err) {
             console.error(err)
             return res.status(500).send(err)
