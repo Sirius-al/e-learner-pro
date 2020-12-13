@@ -10,13 +10,13 @@ const Main = ({ img, uploadCertificateImage }) => {
   const [state, setstate] = useState({name: '', course: '', image: ''})
   const [show, setshow] = useState(false)
 
-  const selectImage = async (e) => {
+  const selectImage = (e) => {
     
     const file = e.target.files[0];
 
     const formdata = new FormData()
     formdata.append('file', file)
-    await uploadCertificateImage(formdata)
+    uploadCertificateImage(formdata)
 
       // console.log(file)
       
@@ -57,7 +57,7 @@ const Main = ({ img, uploadCertificateImage }) => {
       {!show && (
         <Fragment>
           <div className="container">
-          <p class="h4 text-center">Fill-up the form to create your certificate</p>
+          <p className="h4 text-center">Fill-up the form to create your certificate</p>
           <br/>
         <form onSubmit={e => onFormSubmit(e)}>
           <div className="form-group">
