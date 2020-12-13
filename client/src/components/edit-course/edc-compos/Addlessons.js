@@ -18,8 +18,10 @@ const Addlessons = ({ id, uploadlessonsVideos, progress, lessonFiles, submitCour
             if (progress === 0) {
                 const formdata = new FormData()
                 formdata.append('file', file)
-    
+
                 // console.log(file)
+                // const objectURL = URL.createObjectURL(file)
+                // console.log(objectURL)
                 return uploadlessonsVideos(formdata)
             }
         })

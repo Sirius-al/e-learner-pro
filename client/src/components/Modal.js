@@ -1,50 +1,31 @@
 import React, { Fragment, useState } from 'react'
 import { createPortal } from 'react-dom'
-import Videoplayer from 'react-video-js-player'
-import videoSrc from '../FILES/1. Introduction.mp4';
+import ReactPlayer from 'react-player/lazy'
+import { useParams } from 'react-router-dom'
+import history from '../history'
 
 
-/* const videoBinder = (Video) => {
-  let video
+const Modal = () => {
 
-    if (Video !== '') {
-      const vid = Video
-
-      return video = vid
-
-    } else {
-      video = videoSrc
-    }
-
-  return video
-} */
-
-
-const Modal = ({ vidPoster, videolink }) => {
-
-
-    const poster = !vidPoster ? 'https://images.unsplash.com/photo-1602526215099-19d4d14797d6?ixid=MXwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80' : vidPoster
-
-
-    // const video = videoBinder(videolink)
-    // console.log(require(`../${videolink}`).default)
-
+  const {filepath, filename} = useParams()
+  
+  
     return createPortal(
       <Fragment>
         <div
-          
           className="modal fade bd-example-modal-lg"
+          onClick={() => history.goBack()}
           tabIndex={-1}
           role="dialog"
           aria-labelledby="myLargeModalLabel"
           aria-hidden="true">
 
-          <div style={{width: "100%"}} className="modal-dialog modal-dialog-centered modal-lg">
+          <div onClick={e => e.stopPropagation()} style={{width: "100%"}} className="modal-dialog modal-dialog-centered modal-lg">
 
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title" id="exampleModalLongTitle">
-                  Modal title
+                  {filename ? filename : " The file doesn't exist "}
                 </h5>
                 
                 <button
@@ -52,21 +33,24 @@ const Modal = ({ vidPoster, videolink }) => {
                   className="close"
                   data-dismiss="modal"
                   aria-label="Close"
+                  onClick={() => history.goBack()}
                   >
                   <span aria-hidden="true">×</span>
                 </button>
+                
               </div>
 
-              <div className="modal-body">
-                {!videolink && (
-                  <Fragment>
-                    <h5 className="modal-title" style={{display: 'block'}} id="exampleModalLongTitle1">
-                      Playing Default Video...
-                    </h5>
-                  <br/>
-                  </Fragment>
-                )}
-                  <Videoplayer src={videoSrc} poster={poster} width='770' />
+              <div className="modal-body" >
+                
+                  <div style={{height: "300px", width: '768px', display: 'block', position: 'relative' }}>
+                  <ReactPlayer 
+                    width='768px' 
+                    height='300px' 
+                    controls 
+                    style={{backgroundColor: 'rgba(0, 0, 0, 0.8)'}} 
+                    url={`/${filepath}/${filename}`}
+                    playing={true} />
+                  </div>
               </div>
             </div>
 

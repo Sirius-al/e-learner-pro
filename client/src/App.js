@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import './App.css';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -14,6 +14,8 @@ import CourseCard from './components/courseCard'
 import Course from './components/course/Course'
 import Main from './components/Dumb Folder/main'
 import EditCourse from './components/edit-course/EditCourse'
+import Modal from './components/Modal';
+import Alert from './utils/alert';
 
 
   
@@ -34,24 +36,29 @@ const App = ({ getAllCourses, courses }) => {
 
   return (
     <BrowserRouter>
-      <div className="container mt-4">
-        <Route exact path="/">
-        <MainFormPart />
-        <div className="row">
-          {courses && courses.map((course, i) => <CourseCard key={i} course={course}/>)}
-        </div>
-        </Route>
+      <Fragment>
+      <Route exact path='/dumb' component={Main}/>
+        <div className="container mt-4">
+          <Alert />
+          <Route exact path="/">
+            <MainFormPart />
+            <div className="row">
+              {courses && courses.map((course, i) => <CourseCard key={i} course={course}/>)}
+            </div>
+          </Route>
 
-        <Switch>
-          <Route path='/add-learns/:id' component={AddLearns}/>
-          <Route path='/add-lessons/:id' component={AddLessonsAndMaterials}/>
-          <Route path='/add-faq/:id' component={AddFaq}/>
-          <Route path='/view-course/:id' component={Course}/>
-          <Route path='/edit-course/:id' component={EditCourse}/>
-          <Route path='/dumb' component={Main}/>
-        </Switch>
-        
-      </div>
+          <Switch>
+            <Route path='/add-learns/:id' component={AddLearns}/>
+            <Route path='/add-lessons/:id' component={AddLessonsAndMaterials}/>
+            <Route path='/add-faq/:id' component={AddFaq}/>
+            <Route path='/view-course/:id' component={Course}/>
+            <Route path='/edit-course/:id' component={EditCourse}/>
+            <Route path='/view-lesson/:filepath/:filename' component={Modal}/>
+          </Switch>
+        </div>
+
+            
+      </Fragment>
     </BrowserRouter>
   )
 }

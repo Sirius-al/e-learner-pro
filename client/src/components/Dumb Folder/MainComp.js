@@ -1,136 +1,156 @@
-import React, { Fragment, useState } from "react";
-import { connect } from 'react-redux'
+import React, { Fragment } from "react";
+import moment from 'moment'
+import './certificatestyle.css';
 
-import { Tab, Tabs } from '@material-ui/core';
+const Docs = ({ name, course, image }) => {
 
-import { uploadfile, submitCourseLessons } from '../../Actions/actions'
-
-import Button from '@material-ui/core/Button';
-
-
-const CourseLesson = ({ id, uploadfile, file, submitCourseLessons }) => {
-
-    const [value, setvalue] = useState({lessonTitle: '', lessonFile: {}});
-    const [tab, settab] = useState(0)
-
-      const handleTabChange = (e, val) => {
-        settab(val)
-    }
-    const uploadLesson = (e) => {
-        const formdata = new FormData()
-        formdata.append('file', e.target.files[0])
-        uploadfile(formdata)
-         
-    }
-    const sendData = () => {
-        setvalue({...value, lessonFile: file})
-        submitCourseLessons(id, [{lessonTitle: value.lessonTitle, lessonFile: file}])
-        // console.log([{lessonTitle: value.lessonTitle, lessonFile: file}])
-        setvalue({lessonTitle: '', lessonFile: {}})
-    }
-
-
-   
-    // function LessonPanel({value, index}) {
-
-    //     const panel = () => {
-    //         return (
-    //             <Fragment>
-    //                 <input
-    //                     accept="image/*"
-    //                     id="contained-button-file"
-    //                     type="file"
-    //                     style={{display: 'none'}}
-    //                     name="courseFileName"
-    //                     onChange={e => uploadLesson(e)}
-    //                 />
-    //                 <label htmlFor="contained-button-file">
-    //                     <Button variant="contained" color="primary" component="span">
-    //                         Upload Lesson file
-    //                     </Button>
-    //                 </label>
-    //                 <p style={{display: 'inline-block', marginLeft: "10px"}}> <strong>{"lesson file"}</strong> </p>
-    //             </Fragment>
-    //         )
-    //     }
-
-    //     return (
-    //         <div>
-    //             {value===index && panel()}
-    //         </div>
-    //     )
-    // }
-    // function QuizPanel({value, index}) {
-
-    //     const panel = () => {
-    //         return (
-    //             <Fragment>
-    //                 <input
-    //                     accept="image/*"
-    //                     id="contained-button-file"
-    //                     type="file"
-    //                     style={{display: 'none'}}
-    //                     name="courseFileName"
-    //                     multiple
-    //                 />
-    //                 <label htmlFor="contained-button-file">
-    //                     <Button variant="contained" color="primary" component="span">
-    //                         Upload Quiz file
-    //                     </Button>
-    //                 </label>
-    //                 <p style={{display: 'inline-block', marginLeft: "10px"}}> <strong>{'ok'}</strong> </p>
-    //             </Fragment>
-    //         )
-    //     } 
-
-    //     return (
-    //         <div>
-    //             {value===index && panel()}
-    //         </div>
-    //     )
-    // }
 
   return (
-    <div>
-      <div className="card mb-4">
-        <div className="card-header">Course Lesson </div>
-        <div className="card-body">
-            <input type="text" name="courseFileTitle" className="form-control" id="inputZip" placeholder="Course lesson file title" value={value.lessonTitle} onChange={e => setvalue({...value, lessonTitle: e.target.value})}
-                 />
-            <br/>
-            {/* <Tabs value={tab} onChange={handleTabChange} className="mb-3">
-                <Tab label="lesson"/>
-                <Tab label="Quiz"/>
-            </Tabs>
-            <LessonPanel value={tab} index={0}/>
-            <QuizPanel value={tab} index={1}/> */}
-            <Fragment>
-                    <input
-                        accept="video/*"
-                        id="contained-button-file"
-                        type="file"
-                        style={{display: 'none'}}
-                        name="courseFileName"
-                        onChange={e => uploadLesson(e)}
-                    />
-                    <label htmlFor="contained-button-file">
-                        <Button variant="contained" color="primary" component="span">
-                            Upload Lesson file
-                        </Button>
-                    </label>
-                    <p style={{display: 'inline-block', marginLeft: "10px"}}> <strong>{file.filename ? file.filename : "lesson file"}</strong> </p>
-                </Fragment>
-        </div>
-            <Button variant="contained" onClick={() => sendData()} color="secondary" component="span">
-                submit course lesson
-            </Button>
-      </div>
+    <div className="certificate-container" style={{ background: "#f9f9f9" }}>
+      <table
+        id="certificate"
+        style={{
+          width: "11in",
+          margin: "0 auto",
+          textAlign: "center",
+          padding: 10,
+          borderStyle: "groove",
+          borderWidth: 20,
+          outline: "5px dotted #000",
+          height: "8.5in",
+          outlineOffset: "-26px",
+          outlineStyle: "double",
+          borderColor: "#9d8b00",
+        }}
+      >
+        <tbody>
+          <tr>
+            <td>
+              <h1 style={{ fontSize: "0.6in", margin: 0, color: "#000", marginBottom: "10px" }}>
+                Course Completion Certificate
+              </h1>
+              <h3
+                style={{
+                  margin: 0,
+                  fontSize: "0.25in",
+                  color: "black",
+                  textTransform: "uppercase",
+                  fontFamily: "sans-serif",
+                }}
+              >
+                Is hereby granted to :
+              </h3>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h2
+                style={{
+                  color: "#fff",
+                  fontSize: "30px",
+                  margin: "10px 0 30px 0",
+                  fontFamily: "sans-serif",
+                  textTransform: "uppercase",
+                }}
+              >
+                { name ? name : '[ Name ]' }
+              </h2>
+              <h2
+                style={{
+                  color: "#fff",
+                  fontSize: "20px",
+                  margin: "10px 0 20px 0",
+                  fontFamily: "sans-serif",
+                  textTransform: "capitalize",
+                  color:'#494000',
+                  padding: "0px 79px",
+                  lineHeight: '1.5'
+                }}
+              >
+                This certificate is awarded to { <strong> <u> { name ? name : '[ Name ]' } </u> </strong> } for having successfully completing { <strong> <u> { course ? course : '[ course ]' } </u> </strong> } at Sirius_al's Institute
+              </h2>
+              <h2
+                style={{
+                  color: "#fff",
+                  fontSize: "20px",
+                  margin: "10px 0 0 0",
+                  fontFamily: "sans-serif",
+                  textTransform: "capitalize",
+                  color:'#000'
+                }}
+              >
+                CONGRATULATIONS! KEEP IT UP! 
+              </h2>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <img
+                src={image ? `/${image}` : '/FILES/demoImage.png'}
+                alt="demoImage"
+                style={{
+                  maxWidth: "130px",
+                  margin: "0 auto",
+                  display: "block",
+                  borderWidth: 5,
+                  borderStyle: "double",
+                  borderColor: "#333",
+                  boxShadow: "0 5px 10px rgba(0,0,0,0.3)",
+                }}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h4
+                style={{
+                  margin: 0,
+                  fontSize: "0.16in",
+                  fontFamily: "sans-serif",
+                  color: "#000",
+                }}
+              >
+                
+              </h4>
+              <h5
+                style={{
+                  margin: "5px 0 40px",
+                  fontSize: "0.16in",
+                  fontFamily: "sans-serif",
+                  color: "#000",
+                }}
+              >
+                
+              </h5>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <img
+                src="/FILES/demoLogo.png"
+                alt="demoLogo"
+                style={{ maxWidth: "100px" }}
+              />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <h6
+                style={{
+                  margin: "10px 0 20px",
+                  fontFamily: "sans-serif",
+                  fontSize: "0.12in",
+                }}
+              >
+                Reg. by Sirius_al
+              </h6>
+              <em>Awarded at : {moment().format('MMMM Do YYYY, h:mm:ss a')}</em>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   );
 };
 
-const mapStateToProps = (state) => ({
-    file: state.datas.data
-})
-
-export default connect(mapStateToProps, { uploadfile, submitCourseLessons })(CourseLesson);
+export default Docs;

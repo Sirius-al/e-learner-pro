@@ -1,4 +1,8 @@
 import React, { Fragment, useState } from 'react'
+import './courseformpart.css'
+import CircularProgress from '@material-ui/core/CircularProgress';
+import _ from 'lodash'
+import history from '../history';
 
 import { connect } from 'react-redux';
 
@@ -6,10 +10,12 @@ import Button from '@material-ui/core/Button';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
-import { submitCourseBasics, uploadfile } from '../Actions/actions'
+import { submitCourseBasics, uploadfile, SetAlert } from '../Actions/actions'
 
 
-const MainFormPart = ({ submitCourseBasics, course, uploadfile, files }) => {
+const MainFormPart = ({ submitCourseBasics, uploadfile, files, SetAlert }) => {
+
+  // console.log(_. isEmpty(files))
 
   const [title, settitle] = useState('')
   const [catagory, setcatagory] = useState('')
@@ -17,49 +23,57 @@ const MainFormPart = ({ submitCourseBasics, course, uploadfile, files }) => {
   const [duration, setduration] = useState('')
   const [teacher, setteacher] = useState('')
   const [coverImage, setcoverImage] = useState('')
+  const [coverImageData, setcoverImageData] = useState({})
   const [level, setlevel] = useState('')
   const [requirements, setrequirements] = useState('')
   const [price, setprice] = useState(0)
   const [discountPerc, setdiscountPerc] = useState(0)
+  const [uploading, setuploading] = useState(false)
 
-  // const [ inputtedData, setinputtedData] = useState({
-  //   title: title,
-  //   catagory: catagory,
-  //   description: description,
-  //   duration: duration,
-  //   teacher: teacher,
-  //   coverImage: coverImage,
-  //   level: level,
-  //   requirements: requirements,
-  //   price: price,
-  //   discountPerc: discountPerc
-  // })
   
+
+
+  const submition2 = (filename) => {
+    let data
+         data = {
+          title: title,
+          catagory: catagory,
+          description: description,
+          duration: duration,
+          teacher: teacher,
+          coverImage: filename,
+          level: level,
+          requirements: requirements,
+          price: price,
+          discountPerc: discountPerc
+        }
+        
+      submitCourseBasics(data)
+      // console.log(data)
   
-  
-  const [ check, setCheck] = useState(false)
-  
-  const submitBasicForm = (e) => {
+      setTimeout(() => {
+        
+        settitle(''); setcatagory(''); setdescription(''); setduration(''); setteacher(''); setcoverImage(''); setcoverImageData({}); setlevel(''); setrequirements(''); setprice(0); setdiscountPerc(0);
+        
+        setuploading(false)
+      }, 1000)
+  }
+
+
+
+  const submitBasicForm = async (e) => {
     e.preventDefault()
-    const data = {
-      title: title,
-      catagory: catagory,
-      description: description,
-      duration: duration,
-      teacher: teacher,
-      coverImage: files.filepath || coverImage,
-      level: level,
-      requirements: requirements,
-      price: price,
-      discountPerc: discountPerc
-    }
-    submitCourseBasics(data)
-    // console.log(data)
+    setuploading(true)
+    
+    // const formdata = new FormData()
+    // formdata.append('file', coverImageData)
+    // await uploadfile(formdata)
+
+      return submition2(files.filename)
+
   }
   
   
-  // console.log(courseMaterial )
-
   const SelectOptions = [
     { value: 'HTML', label: 'HTML' },
     { value: 'HTML 5', label: 'HTML 5' },
@@ -87,25 +101,37 @@ const MainFormPart = ({ submitCourseBasics, course, uploadfile, files }) => {
     setlevel(newValue.value);
   };
 
-  const onCoverImageUpload = (e) => {
-    setcoverImage(e.target.files[0].name)
+  const onCoverImageUpload = async (e) => {
+    let imgurl;
+    const file = e.target.files[0];
+
+    [...e.target.files].map(f => setcoverImageData(f))
+
+    var reader = new FileReader();
+    var url = reader.readAsDataURL(file);
+
+    reader.onloadend = function (e) {
+      imgurl = reader.result
+      setcoverImage(imgurl)
+    }
 
     const formdata = new FormData()
-    formdata.append('file', e.target.files[0])
-    uploadfile(formdata)
+    formdata.append('file', file)
+    await uploadfile(formdata)
+    
   };
 
     return (
         <Fragment>
-            <form>
+          <form>
           <div className="form-group">
             <label htmlFor="inputEmail4">Course Title</label>
-            <input type="text" className="form-control" id="inputEmail4" placeholder="Put your course's Title" name='title' onChange={e => settitle(e.target.value)} />
+            <input type="text" className="form-control" id="inputEmail4" placeholder="Put your course's Title" name='title' value={title} onChange={e => settitle(e.target.value)} />
           </div>
         <div className="form-row">
           <div className="form-group col-md-3">
             <label htmlFor="inputAddress">Teacher</label>
-            <input type="text" className="form-control" name='teacher'  id="inputAddress" placeholder="Ex: Nafiz Al din" onChange={e => setteacher(e.target.value)} />
+            <input type="text" className="form-control" name='teacher'  id="inputAddress" placeholder="Ex: Nafiz Al din" value={teacher} onChange={e => setteacher(e.target.value)} />
           </div>
           <div className="form-group col-md-3" style={{marginTop: '30px', textAlign: 'center'}}>
             <input
@@ -122,8 +148,17 @@ const MainFormPart = ({ submitCourseBasics, course, uploadfile, files }) => {
                   </Button>
               </label>
           </div>
-          <div className="form-group col-md-5" style={{marginTop: '30px'}}>
-            <p> <strong>{coverImage === '' ? "Select a Cover Image For your Course" : coverImage}</strong> </p>
+          <div className="form-group col-md-6" style={{marginTop: '30px'}}>
+            {coverImage === '' ? (<p> <strong>Select a Cover Image For your Course</strong></p>) : (
+              <div className="card bg-dark text-white">
+                <img src={coverImage} className="card-img" alt="..." />
+                <div className="cover-Image-overlay card-img-overlay">
+                  <h5 className="cover-Image-title card-title text-white text-center">{coverImageData.name}</h5>
+                </div>
+              </div>
+
+            )}
+            
           </div>
         </div>
         <div className="form-row">
@@ -132,17 +167,18 @@ const MainFormPart = ({ submitCourseBasics, course, uploadfile, files }) => {
             <CreatableSelect id="inputCity"
               isClearable isMulti
               placeholder="Course Catagories"
+              defaultInputValue={''}
               onChange={handleChange}
               options={SelectOptions}
             />
           </div>
           <div className="form-group col-md-2">
             <label htmlFor="inputState">course Price</label>
-            <input type="number" name="price"  className="form-control" id="inputState" placeholder="course's Price" onChange={e => setprice(e.target.value)} />
+            <input type="number" name="price"  className="form-control" id="inputState" placeholder="course's Price" value={price} onChange={e => setprice(e.target.value)} />
           </div>
           <div className="form-group col-md-2">
             <label htmlFor="inputZip">course duration</label>
-            <input type="text" name="duration"  className="form-control" id="inputZip" placeholder="3 hrs - 45 mins" onChange={e => setduration(e.target.value)} />
+            <input type="text" name="duration" value={duration}  className="form-control" id="inputZip" placeholder="3 hrs - 45 mins" onChange={e => setduration(e.target.value)} />
           </div>
 
           <div className="form-group col-md-3">
@@ -151,28 +187,31 @@ const MainFormPart = ({ submitCourseBasics, course, uploadfile, files }) => {
               // defaultValue={colourOptions[2]}
               placeholder="Course's Catagory"
               options={LevelOptions}
+              defaultInputValue={''}
               onChange={handleChange2}
             />
           </div>
         </div>
         <div className="form-group">
             <label htmlFor="Descriptioninput">Course Description</label>
-            <textarea type="text" className="form-control" name='description'  row='10' id="Descriptioninput" placeholder="Ex: Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur" onChange={e => setdescription(e.target.value)} />
+            <textarea type="text" className="form-control" name='description'  row='10' id="Descriptioninput" placeholder="Ex: Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur" value={description} onChange={e => setdescription(e.target.value)} />
          </div>
         <div className="form-group">
             <label htmlFor="Descriptioninput">Course Requirements</label>
-            <textarea type="text" className="form-control" name='description'  row='3' id="Descriptioninput" placeholder="Put course Requirements seperated by commas," onChange={e => setrequirements(e.target.value)} />
+            <textarea type="text" className="form-control" name='description'  row='3' id="Descriptioninput" placeholder="Put course Requirements seperated by commas," value={requirements} onChange={e => setrequirements(e.target.value)} />
          </div>
         <div className="form-row">
           <div className="form-group col-md-4">
             <label htmlFor="inputZip">Course Discount</label>
-            <input type="number" name='discountPerc' className="form-control" id="inputZip" placeholder="will be calculated in percentage" onChange={e => setdiscountPerc(e.target.value)} />
+            <input type="number" name='discountPerc' value={discountPerc} className="form-control" id="inputZip" placeholder="will be calculated in percentage" onChange={e => setdiscountPerc(e.target.value)} />
           </div>
         </div>
         <div className="form-row">
           <div className="form-group col-md-12">
 
-          <button className="btn btn-primary mb-4" onClick={e=> submitBasicForm(e)}>submit this form ^</button>
+          {uploading ? <Button style={{width: '200px', height: '50px'}} className="btn btn-primary mb-4" variant="contained" disabled color="secondary" startIcon={<CircularProgress />}> uploading </Button> : <button className="btn btn-primary mb-4" onClick={e=> submitBasicForm(e)}>submit this form ^</button> }
+          
+          
           </div>
         </div>
       </form>
@@ -185,4 +224,4 @@ const mapStateToProps = (state) => ({
     files: state.datas.data
   })
 
-export default connect(mapStateToProps, { submitCourseBasics, uploadfile })(MainFormPart)
+export default connect(mapStateToProps, { submitCourseBasics, uploadfile, SetAlert })(MainFormPart)

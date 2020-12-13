@@ -1,0 +1,33 @@
+#certificate {
+    background: linear-gradient(#c8be75 50%, rgba(255, 255, 255, 0) 0) 0 0, radial-gradient(circle closest-side,
+    #c8be75 50%, rgba(255, 255, 255, 0) 0) 0 0, radial-gradient(circle closest-side, #c8be75 0%, rgba(255, 255, 255,
+    0) 0) 55px 0 #FFF;
+    background-size: 10.5in 8in;
+    background-repeat: repeat-x;
+    }
+
+    body {
+        margin: 0;
+    }
+
+    @media print {
+        table {
+            background: linear-gradient(#c8be75 50%, rgba(255, 255, 255, 0) 0) 0 0, radial-gradient(circle closest-side, #c8be75 50%, rgba(255, 255, 255, 0) 0) 0 0, radial-gradient(circle closest-side, #c8be75 0%, rgba(255, 255, 255, 0) 0) 55px 0 #FFF;
+            background-size: 10.5in 8in;
+            background-repeat: repeat-x;
+            -webkit-print-color-adjust: exact;
+        }
+    }
+
+    @page {
+        margin-top: 0.5cm;
+        margin-bottom: 2cm;
+        margin-left: 2cm;
+        margin-right: 2cm;
+    }
+    .Certificate-button {
+        position: absolute;
+        bottom: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+    }

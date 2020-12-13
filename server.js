@@ -40,12 +40,57 @@ ConnectToDatabase()
 
 var corsOptions = {
     // "Access-Control-Allow-Origin": '*',
-    origin: [`http://localhost:3000`, 'https://course-upload.herokuapp.com/'],
+    origin: [`http://localhost:3000`, 'https://course-uploader2.herokuapp.com/'],
     optionsSuccessStatus: 200
 }
 
 app.use(cors(corsOptions))
 
+
+
+app.post('/upload/certificate-image', (req, res) => {
+    if (res.files === null) {
+        return res.status(400).json({msg: "no file was uploaded"})
+    }
+
+    const file = req.files.file
+
+    console.log(file)
+
+    file.mv(`${__dirname}/client/public/FILES/certificateImage/${file.name}`, (err) => {
+        if (err) {
+            console.error(err)
+            return res.status(500).send(err)
+        }
+
+        res.status(200).json({
+            filename: file.name,
+            filepath: `FILES/certificateImage/${file.name}`
+        })
+    })
+});
+
+app.post('/upload/coverimage', (req, res) => {
+    if (res.files === null) {
+        return res.status(400).json({msg: "no file was uploaded"})
+    }
+
+    const file = req.files.file
+
+    console.log(file)
+
+    file.mv(`${__dirname}/client/public/FILES/coverimages/${file.name}`, (err) => {
+        if (err) {
+            console.error(err)
+            return res.status(500).send(err)
+        }
+
+        res.status(200).json({
+            filename: file.name,
+            filepath: `FILES/coverimages/${file.name}`
+        })
+    })
+});
 
 
 app.post('/upload', (req, res) => {
@@ -57,7 +102,7 @@ app.post('/upload', (req, res) => {
 
     console.log(file)
 
-    file.mv(`${__dirname}/client/src/FILES/${file.name}`, (err) => {
+    file.mv(`${__dirname}/client/public/FILES/${file.name}`, (err) => {
         if (err) {
             console.error(err)
             return res.status(500).send(err)

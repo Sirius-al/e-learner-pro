@@ -3,10 +3,9 @@ import React, { Fragment, useEffect } from 'react'
 import Addlessons from './edc-compos/Addlessons';
 import Addmaterials from './edc-compos/Addmaterials';
 import { getCourse } from '../../Actions/actions';
-import Modal from '../Modal';
 
 import { connect } from 'react-redux'
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 
 
 const AddLessonsAndMaterials = ({ getCourse, course }) => {
@@ -16,10 +15,6 @@ const AddLessonsAndMaterials = ({ getCourse, course }) => {
     useEffect(() => {
         getCourse(id)
     }, [])
-
-    const modal = (src) => {
-        return <Modal videolink={src} />
-    }
 
 
     const { lessons, courseMaterials, duration } = course
@@ -116,12 +111,10 @@ const AddLessonsAndMaterials = ({ getCourse, course }) => {
                                 <ul>
                                     { lesson.lessonFile && lesson.lessonFile.length > 0 && lesson.lessonFile.map((file, i) => (
                                         <li key={i}>
-                                            <p data-toggle="modal" data-target=".bd-example-modal-lg" //? file.filepath
-                                            className="video" 
-                                            onClick={modal(file.filepath)}
-                                            >
+                                            <Link to={`/view-lesson/${file.filepath}`} data-toggle="modal" data-target=".bd-example-modal-lg" //? file.filepath
+                                            className="video" >
                                                 { file.filename }
-                                            </p>
+                                            </Link>
                                             
                                         </li>
                                         
