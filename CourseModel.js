@@ -40,7 +40,7 @@ const CourseSchema = new mongoose.Schema({
     courseMaterials: [
         {
             courseFileTitle: String,
-            courseFile: Object
+            courseFile: Array
         }
     ],
     lessons: [

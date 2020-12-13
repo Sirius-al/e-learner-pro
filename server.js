@@ -40,7 +40,7 @@ ConnectToDatabase()
 
 var corsOptions = {
     // "Access-Control-Allow-Origin": '*',
-    origin: [`http://localhost:3000`, 'https://course-uploader2.herokuapp.com'],
+    origin: [`http://localhost:3000`, 'https://course-upload2.herokuapp.com'],
     optionsSuccessStatus: 200
 }
 
@@ -57,7 +57,7 @@ app.post('/upload/certificate-image', (req, res) => {
 
     console.log(file)
 
-    file.mv(`${__dirname}/client/public/FILES/certificateImage/${file.name}`, (err) => {
+    file.mv(`${__dirname}/client/public/certificateImage/${file.name}`, (err) => {
         if (err) {
             console.error(err)
             return res.status(500).send(err)
@@ -65,7 +65,7 @@ app.post('/upload/certificate-image', (req, res) => {
 
         res.status(200).json({
             filename: file.name,
-            filepath: `FILES/certificateImage/${file.name}`
+            filepath: `certificateImage/${file.name}`
         })
     })
 });
