@@ -40,7 +40,7 @@ ConnectToDatabase()
 
 var corsOptions = {
     // "Access-Control-Allow-Origin": '*',
-    origin: [`http://localhost:3000`, 'https://course-upload2.herokuapp.com'],
+    origin: [`http://localhost:3000`, 'https://course-upload3.herokuapp.com'],
     optionsSuccessStatus: 200
 }
 
