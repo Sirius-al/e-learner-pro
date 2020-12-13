@@ -42,8 +42,8 @@ const AddMaterials = ({ id, uploadMaterialfiles, materialFiles, m_progress, subm
 
     function titleHandler(e) {
 
-        newMap.set('courseFileTitle', e.target.value || '')
         setvalue(e.target.value)
+        return newMap.set('courseFileTitle', e.target.value || '')
     }
 
     const sendData = (e) => {
