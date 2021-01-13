@@ -9,7 +9,7 @@ const AddMaterials = ({ id, uploadMaterialfiles, materialFiles, m_progress, subm
 
     const [value, setvalue] = useState('')
 
-    let newMap = new Map();
+    let form = new FormData();
 
     const inputtedFile = (e) => {
         
@@ -36,21 +36,23 @@ const AddMaterials = ({ id, uploadMaterialfiles, materialFiles, m_progress, subm
         // setvalue({...value, courseFileTitle: e.target.value})
 }
 
-    if (materialFiles.length > 0) {
-        newMap.set('courseFile', materialFiles)
+    if (materialFiles.length > 1) {
+        form.append('courseFile', materialFiles)
     }
 
     function titleHandler(e) {
 
         setvalue(e.target.value)
-        return newMap.set('courseFileTitle', e.target.value || '')
+        
     }
 
     const sendData = (e) => {
         e.preventDefault()
 
-        const newObj = Object.fromEntries(newMap)
-        submitCourseMaterial(id, [newObj])
+        form.append('courseFileTitle', value)
+
+        // const newObj = Object.fromEntries(newMap)
+        submitCourseMaterial(id, JSON.stringify({courseFile: materialFiles, courseFileTitle: value}))
 
         setvalue('')
         // console.log(id, [newObj])

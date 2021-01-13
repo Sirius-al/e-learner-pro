@@ -81,7 +81,7 @@ export const uploadCertificateImage = (file) => async dispatch => {
   }
 export const uploadMaterialfiles = (file, ) => async dispatch => {
     try {
-        const res = await backendCall.post('/upload', file, {
+        const res = await backendCall.post('/upload/materials', file, {
             headers: {
                 "Content-Type": "multipart/form-data"
             },
@@ -170,7 +170,7 @@ export const submitCourseBasics = (data) => async dispatch => {
 
 export const submitCourseMaterial = (id, data) => async dispatch => {
     try {
-        const res = await backendCall.patch(`/course/course-materials/${id}`, data, {
+        const res = await backendCall.patch(`/course/course-materials/${id}`, JSON.parse(data), {
             headers: {
                 "Content-Type": "application/json"
             }
@@ -182,7 +182,7 @@ export const submitCourseMaterial = (id, data) => async dispatch => {
         
     } catch (err) {
         const error = err.response
-        dispatch(SetAlert('danger', "course materials submisson failed Please refresh the page"))
+        dispatch(SetAlert('error', "course materials submisson failed Please refresh the page"))
         console.error(error)
         // dispatch({
             //   type: PROFILE_ERROR,

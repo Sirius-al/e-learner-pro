@@ -109,8 +109,9 @@ const Course = ({ getCourse, course }) => {
                 <div className="box_detail">
                   <figure>
                     <a
-                      href="https://www.youtube.com/watch?v=LDgd_gUcqCw"
-                      className="video" target="blank"
+                      target="blank"
+                      href="#!"
+                      className="video" 
                     >
                       <i className="arrow_triangle-right" />
                       <img

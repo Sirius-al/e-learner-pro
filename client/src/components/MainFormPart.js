@@ -10,10 +10,10 @@ import Button from '@material-ui/core/Button';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
-import { submitCourseBasics, uploadfile, SetAlert } from '../Actions/actions'
+import { submitCourseBasics, uploadCoverImage, SetAlert } from '../Actions/actions'
 
 
-const MainFormPart = ({ submitCourseBasics, uploadfile, files, SetAlert }) => {
+const MainFormPart = ({ submitCourseBasics, uploadCoverImage, files, SetAlert }) => {
 
   // console.log(_. isEmpty(files))
 
@@ -117,7 +117,7 @@ const MainFormPart = ({ submitCourseBasics, uploadfile, files, SetAlert }) => {
 
     const formdata = new FormData()
     formdata.append('file', file)
-    await uploadfile(formdata)
+    await uploadCoverImage(formdata)
     
   };
 
@@ -224,4 +224,4 @@ const mapStateToProps = (state) => ({
     files: state.datas.data
   })
 
-export default connect(mapStateToProps, { submitCourseBasics, uploadfile, SetAlert })(MainFormPart)
+export default connect(mapStateToProps, { submitCourseBasics, uploadCoverImage, SetAlert })(MainFormPart)

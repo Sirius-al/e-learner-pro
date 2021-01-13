@@ -71,7 +71,22 @@ exports.addCourseMaterialbyCourseId = async (req, res, next) => {
     try {
       const course = await Course.findById(req.params.id)
 
-      req.body.map(coursematerial => course.courseMaterials.push(coursematerial))
+      if (!course) {
+        return res.status(401).json({
+          success: false,
+          msg: 'No course found !'
+        })
+        
+      }
+
+      // console.log(req.body)
+
+      if (!req.body) {
+        console.log(`courseFile Array not found !`)
+      }
+
+      course.courseMaterials.push(req.body)
+
 
       await course.save()
 
@@ -80,6 +95,7 @@ exports.addCourseMaterialbyCourseId = async (req, res, next) => {
         course
       })
     } catch (err) {
+      console.log(err)
       res.status(400).json({
             success: false,
             err

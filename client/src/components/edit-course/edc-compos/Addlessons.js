@@ -46,6 +46,7 @@ const Addlessons = ({ id, uploadlessonsVideos, progress, lessonFiles, submitCour
         const newObj = Object.fromEntries(newMap)
         // console.log(newObj)
         submitCourseLessons(id, [newObj])
+
     }
 
 

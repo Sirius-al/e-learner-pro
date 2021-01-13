@@ -37,12 +37,7 @@ const CourseSchema = new mongoose.Schema({
             learnDescription: String
         }
     ],
-    courseMaterials: [
-        {
-            courseFileTitle: String,
-            courseFile: Array
-        }
-    ],
+    courseMaterials: [Object],
     lessons: [
         {
             lessonTitle: String,

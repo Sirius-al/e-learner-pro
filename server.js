@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 
 
 const courseController = require('./Controller/courseController');
@@ -40,7 +41,7 @@ ConnectToDatabase()
 
 var corsOptions = {
     // "Access-Control-Allow-Origin": '*',
-    origin: [`http://localhost:3000`, 'https://course-upload3.herokuapp.com', 'course-upload3.herokuapp.com'],
+    origin: [`http://localhost:3000`],
     optionsSuccessStatus: 200
 }
 
@@ -79,7 +80,7 @@ app.post('/upload/coverimage', (req, res) => {
 
     console.log(file)
 
-    file.mv(`${__dirname}/client/build/FILES/coverimages/${file.name}`, (err) => {
+    file.mv(path.join(__dirname, 'client', 'public', 'FILES', 'coverimages', `${file.name}`), (err) => { // `${__dirname}/client/build/FILES/coverimages/${file.name}`
         if (err) {
             console.error(err)
             return res.status(500).send(err)
@@ -93,6 +94,28 @@ app.post('/upload/coverimage', (req, res) => {
 });
 
 
+app.post('/upload/materials', (req, res) => {
+    if (res.files === null) {
+        return res.status(400).json({msg: "no file was uploaded"})
+    }
+
+    const file = req.files.file
+
+    console.log(file)
+
+    file.mv(path.join(__dirname, 'client', 'public', 'FILES', 'materials', `${file.name}`), (err) => { // `${__dirname}/client/build/FILES/${file.name}`
+        if (err) {
+            console.error(err)
+            return res.status(500).send(err)
+        }
+
+        res.status(200).json({
+            filename: file.name,
+            filepath: `FILES/materials/${file.name}`
+        })
+    })
+});
+
 app.post('/upload', (req, res) => {
     if (res.files === null) {
         return res.status(400).json({msg: "no file was uploaded"})
@@ -102,7 +125,7 @@ app.post('/upload', (req, res) => {
 
     console.log(file)
 
-    file.mv(`${__dirname}/client/build/FILES/${file.name}`, (err) => {
+    file.mv(path.join(__dirname, 'client', 'public', 'FILES', `${file.name}`), (err) => { // `${__dirname}/client/build/FILES/${file.name}`
         if (err) {
             console.error(err)
             return res.status(500).send(err)
@@ -132,6 +155,17 @@ if (process.env.NODE_ENV === 'production') {
     app.get('*', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
     });
+
+    if (fs.existsSync(`${__dirname}/client/build/FILES`)) {
+        fs.mkdirSync(`${__dirname}/client/build/FILES/coverimages`)
+        fs.mkdirSync(`${__dirname}/client/build/FILES/materials`)
+    }
+
+}
+if (process.env.NODE_ENV === 'development') {
+    //* set static folder
+    app.use(express.static('client/public'))
+
   }
 
 app.use('*', (req, res) => {
