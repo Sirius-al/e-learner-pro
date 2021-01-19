@@ -84,7 +84,7 @@ const EditCourse = ({ getCourse, course }) => {
                 </section>
                 {/* /section */}
                 <section id="lessons">
-                    <Lessons id={id} duration={duration} courseMaterials={courseMaterials} lessons={lessons}/>
+                    <Lessons _id={id} duration={duration} courseMaterials={courseMaterials} lessons={lessons}/>
                     <Link to={`/add-lessons/${id}`} className="btn btn-info mb-3" style={{width: '40%'}}>Add Lessons and Course materials</Link>
                 </section>
                 <h4><strong>Teacher</strong></h4>

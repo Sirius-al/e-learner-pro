@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import Modal from '../Modal'
 
-const Lessons = ({ id, duration, courseMaterials, lessons }) => {
+const Lessons = ({ _id, duration, courseMaterials, lessons }) => {
   return (
     <Fragment>
       <div className="intro_title">
@@ -84,7 +84,7 @@ const Lessons = ({ id, duration, courseMaterials, lessons }) => {
                       <ul>
                       { lesson.lessonFile && lesson.lessonFile.length > 0 && lesson.lessonFile.map((file, i) => (
                             <li key={i}>
-                                <Link to={`/view-lesson/${id}/${file.originalName}`} className="video" >
+                                <Link to={`/view-lesson/${_id}/${file.originalName}`} className="video" >
                                     { file.originalName }
                                 </Link>
                             </li>

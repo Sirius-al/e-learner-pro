@@ -21,7 +21,7 @@ const Course = ({ getCourse, course }) => {
     getCourse(id)
   }, [])
 
-  const { title, teacher, description, discountPerc, requirements, duration, coverImage, level, price, learns, courseMaterials, lessons, faq } = course
+  const { _id, title, teacher, description, discountPerc, requirements, duration, coverImage, level, price, learns, courseMaterials, lessons, faq } = course
 
     return (
       <main>
@@ -92,7 +92,7 @@ const Course = ({ getCourse, course }) => {
                 </section>
                 {/* /section */}
                 <section id="lessons">
-                  <Lessons duration={duration} courseMaterials={courseMaterials} lessons={lessons}/>
+                  <Lessons _id={_id} duration={duration} courseMaterials={courseMaterials} lessons={lessons}/>
                 </section>
                 <h4><strong>Teacher</strong></h4>
                     <div className="row">

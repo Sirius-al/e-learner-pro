@@ -28,12 +28,6 @@ const App = ({ getAllCourses, courses }) => {
     getAllCourses()
   }, [getAllCourses])
 
-  // const card = (courses) => {
-  //   console.log(courses)
-  //   if (courses) {
-  //     courses.map(course => <CourseCard course={course}/>)
-  //   }
-  // }
 
   return (
     <BrowserRouter>

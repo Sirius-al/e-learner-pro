@@ -70,7 +70,7 @@ const Video_main = ({ getCourseLessonsByCourseId, lessons }) => {
                             //     <p className="mb-1">Some Description about the lesson</p>
                             // </a>
 
-                            <div id="accordion">
+                            <div id="accordion" key={i}>
                             <div className="card">
                                 <div className="card-header" id={`headingOne${i}`} style={{border: '2px solid rgb(184, 3, 133)', backgroundColor: 'rgba(165, 165, 165, 0.905)'}}>
                                     
@@ -82,8 +82,8 @@ const Video_main = ({ getCourseLessonsByCourseId, lessons }) => {
                                 </div>
                                 <div id={`collapse${i}`} className="collapse show" aria-labelledby={`headingOne${i}`} data-parent="#accordion">
 
-                                    {lesson && !lesson.lessonFile.length > 0 ? "No Lesson Videos Yet !" : lesson.lessonFile.map(file => (
-                                        <div className="card-body">
+                                    {lesson && !lesson.lessonFile.length > 0 ? "No Lesson Videos Yet !" : lesson.lessonFile.map((file, i) => (
+                                        <div className="card-body" key={i}>
                                         <a href="#!" className="list-group-item list-group-item-action flex-column align-items-start text-center" 
                                          onClick={(e)=> changeUrl(e, file)} >
                                             <div className="d-flex w-100 justify-content-between">
