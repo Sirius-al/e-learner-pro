@@ -14,9 +14,7 @@ const CourseSchema = new mongoose.Schema({
     duration: {
         type: String
     },
-    coverImage: {
-        type: String
-    },  
+    coverImage: Object,
     level: {
         type: String
     },
@@ -37,12 +35,16 @@ const CourseSchema = new mongoose.Schema({
             learnDescription: String
         }
     ],
-    courseMaterials: [Object],
+    courseMaterials: [
+        {
+            courseFile: [Object],
+            courseFileTitle: String
+        }
+    ],
     lessons: [
         {
             lessonTitle: String,
-            lessonFile: Array,
-            quiz: Object
+            lessonFile: [Object]
         }
     ],
     faq: [

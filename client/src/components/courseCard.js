@@ -15,7 +15,7 @@ const courseCard = ({ course }) => {
     return (
       <div className='courseCards col-sm-4'>
         <div className="card mb-3" style={{width: '30vw'}}>
-          <img src={ coverImage === '' ? 'https://picsum.photos/200/300/?blur' : `/FILES/coverimages/${coverImage}` } style={{height: '20vh'}} className="card-img-top" alt={title} />
+          <img src={ coverImage === {} ? 'https://picsum.photos/200/300/?blur' : `${coverImage?.Location}` } style={{height: '20vh'}} className="card-img-top" alt={title} />
           <div className="card-body">
             <h5 className="card-title">{title}</h5>
             <p className="card-text">

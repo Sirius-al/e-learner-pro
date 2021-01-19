@@ -14,7 +14,8 @@ import CourseCard from './components/courseCard'
 import Course from './components/course/Course'
 import Main from './components/Dumb Folder/main'
 import EditCourse from './components/edit-course/EditCourse'
-import Modal from './components/Modal';
+import Video_main from './components/Video_play/Video_main';
+import CourseDetailsEdit from './components/edit-course/CourseDetailsEdit';
 import Alert from './utils/alert';
 
 
@@ -53,9 +54,10 @@ const App = ({ getAllCourses, courses }) => {
             <Route path='/add-faq/:id' component={AddFaq}/>
             <Route path='/view-course/:id' component={Course}/>
             <Route path='/edit-course/:id' component={EditCourse}/>
-            <Route path='/view-lesson/:filepath/:filename' component={Modal}/>
+            <Route path='/edit-course-details/:id' component={CourseDetailsEdit}/>
           </Switch>
         </div>
+            <Route path='/view-lesson/:courseId/:videoId?' component={Video_main}/>
 
             
       </Fragment>

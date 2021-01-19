@@ -48,7 +48,7 @@ const Modal = () => {
                     height='300px' 
                     controls 
                     style={{backgroundColor: 'rgba(0, 0, 0, 0.8)'}} 
-                    url={`/${filepath}/${filename}`}
+                    url={filepath}
                     playing={true} />
                   </div>
               </div>

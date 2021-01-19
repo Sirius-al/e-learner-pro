@@ -33,7 +33,7 @@ const MainFormPart = ({ submitCourseBasics, uploadCoverImage, files, SetAlert })
   
 
 
-  const submition2 = (filename) => {
+  const submition2 = (file = {}) => {
     let data
          data = {
           title: title,
@@ -41,7 +41,7 @@ const MainFormPart = ({ submitCourseBasics, uploadCoverImage, files, SetAlert })
           description: description,
           duration: duration,
           teacher: teacher,
-          coverImage: filename,
+          coverImage: file,
           level: level,
           requirements: requirements,
           price: price,
@@ -64,12 +64,9 @@ const MainFormPart = ({ submitCourseBasics, uploadCoverImage, files, SetAlert })
   const submitBasicForm = async (e) => {
     e.preventDefault()
     setuploading(true)
-    
-    // const formdata = new FormData()
-    // formdata.append('file', coverImageData)
-    // await uploadfile(formdata)
 
-      return submition2(files.filename)
+
+    return submition2(files)
 
   }
   
@@ -116,7 +113,7 @@ const MainFormPart = ({ submitCourseBasics, uploadCoverImage, files, SetAlert })
     }
 
     const formdata = new FormData()
-    formdata.append('file', file)
+    formdata.append('coverImage', file)
     await uploadCoverImage(formdata)
     
   };

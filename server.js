@@ -5,6 +5,9 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const Aws = require('aws-sdk');
+// const cookieParser = require('cookie-parser');
+
 
 
 const courseController = require('./Controller/courseController');
@@ -13,9 +16,11 @@ const app = express();
 const Port = process.env.PORT || 5000
 
 app.use(express.json())
+// app.use(cookieParser())
+
 app.use(fileupload({
     useTempFiles: true,
-    tempFileDir: "/tmp/"
+    tempFileDir: "./tmp"
 }))
 
 dotenv.config({
@@ -26,6 +31,7 @@ dotenv.config({
 const ConnectToDatabase = async () => {
     try {
       await mongoose.connect(process.env.MONGOURI, {
+          family: 4,
           useFindAndModify: false,
           useCreateIndex: true,
           useNewUrlParser: true,
@@ -41,7 +47,7 @@ ConnectToDatabase()
 
 var corsOptions = {
     // "Access-Control-Allow-Origin": '*',
-    origin: [`http://localhost:3000`],
+    origin: [`http://localhost:3000`, 'https://e-learner-pro.herokuapp.com'],
     optionsSuccessStatus: 200
 }
 
@@ -58,7 +64,7 @@ app.post('/upload/certificate-image', (req, res) => {
 
     console.log(file)
 
-    file.mv(`${__dirname}/client/build/certificateImage/${file.name}`, (err) => {
+    file.mv(path.join(__dirname, 'FILES', 'certificateImage', `${file.name}`), (err) => { // `${__dirname}/client/build/certificateImage/${file.name}`, 
         if (err) {
             console.error(err)
             return res.status(500).send(err)
@@ -71,61 +77,201 @@ app.post('/upload/certificate-image', (req, res) => {
     })
 });
 
-app.post('/upload/coverimage', (req, res) => {
-    if (res.files === null) {
-        return res.status(400).json({msg: "no file was uploaded"})
-    }
+app.post('/upload/coverimage', async (req, res, next) => {
+    try {
+        if (req.files.coverImage) {
+            const theFile = req.files.coverImage
+            console.log(theFile)
+            // console.log(fs.statSync(`${__dirname}\\${theFile.tempFilePath}`))
+            
+            // let response;
 
-    const file = req.files.file
-
-    console.log(file)
-
-    file.mv(path.join(__dirname, 'client', 'public', 'FILES', 'coverimages', `${file.name}`), (err) => { // `${__dirname}/client/build/FILES/coverimages/${file.name}`
-        if (err) {
-            console.error(err)
-            return res.status(500).send(err)
+            if (theFile) {
+                let s3 = new Aws.S3({
+                    useAccelerateEndpoint: true,
+                    accessKeyId: 'AKIAVA7RIL2ZJ4OJ4FOH',
+                    secretAccessKey: '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',
+                    Bucket: "the-dev-rapport"
+                })
+                
+                const param = {
+                    Bucket: 'the-dev-rapport',
+                    Key: `images/${Date.now()}__${theFile.name}`,
+                    Body: fs.readFileSync(`${__dirname}\\${theFile.tempFilePath}`),
+                    ContentType: theFile.mimetype,
+                    ACL: 'public-read'
+                }
+                    
+                    await s3.upload(param, (err, data) => {
+                        if (err) {
+                            console.log(err)
+                            return res.status(400).json({
+                                success: true,
+                                Error: err
+                            })
+                        } else {
+                            const newObj = {...data, type: theFile.mimetype, originalName: theFile.name, size: theFile.size}
+                            fs.unlinkSync(`${__dirname}\\${theFile.tempFilePath}`)
+                            console.log('data =:> ', newObj)
+                            return res.status(200).json({
+                                success: true,
+                                file: newObj
+                            })
+                        }
+                    })
+                    
+            }
         }
-
-        res.status(200).json({
-            filename: file.name,
-            filepath: `FILES/coverimages/${file.name}`
+        
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            err
         })
-    })
+    }
 });
 
 
-app.post('/upload/materials', (req, res) => {
-    if (res.files === null) {
-        return res.status(400).json({msg: "no file was uploaded"})
-    }
+app.post('/upload/lessons', async (req, res, next) => {
+    
+    try {
+        if (req.files.courseFile) {
+            const theFile = req.files.courseFile
+            console.log(theFile)
+            // console.log(fs.statSync(`${__dirname}\\${theFile.tempFilePath}`))
 
-    const file = req.files.file
+            // let response;
 
-    console.log(file)
+            if (theFile) {
+                let s3 = new Aws.S3({
+                    useAccelerateEndpoint: true,
+                    accessKeyId: 'AKIAVA7RIL2ZJ4OJ4FOH',
+                    secretAccessKey: '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',
+                    Bucket: "the-dev-rapport"
+                })
 
-    file.mv(path.join(__dirname, 'client', 'public', 'FILES', 'materials', `${file.name}`), (err) => { // `${__dirname}/client/build/FILES/${file.name}`
-        if (err) {
-            console.error(err)
-            return res.status(500).send(err)
+                const param = {
+                    Bucket: 'the-dev-rapport',
+                    Key: `${Date.now()}__${theFile.name}`,
+                    Body: fs.readFileSync(`${__dirname}\\${theFile.tempFilePath}`),
+                    // Body: `./tmp/1. What You Will Learn in Level 1.mp4`,
+                    ContentType: theFile.mimetype,
+                    ACL: 'public-read'
+                }
+
+
+                
+                // const reading = fs.statSync(`${__dirname}\\${theFile.tempFilePath}`)
+                
+                // if (theFile.size === reading.size) {
+
+                    await s3.upload(param, (err, data) => {
+                        if (err) {
+                            console.log(err)
+                            return res.status(400).json({
+                                success: true,
+                                Error: err
+                            })
+                        } else {
+                            const newObj = {...data, type: theFile.mimetype, originalName: theFile.name, size: theFile.size}
+                            fs.unlinkSync(`${__dirname}\\${theFile.tempFilePath}`)
+                            console.log('data =:> ', newObj)
+                            return res.status(200).json({
+                                success: true,
+                                file: newObj
+                            })
+                        }
+                    })
+                    
+                // }
+                // console.log(res)
+            }
         }
 
-        res.status(200).json({
-            filename: file.name,
-            filepath: `FILES/materials/${file.name}`
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            err
         })
-    })
+    }
+    
+});
+
+
+app.post('/upload/materials', async (req, res, next) => {
+
+    try {
+        if (req.files.courseFile) {
+            const theFile = req.files.courseFile
+            console.log(theFile)
+            // console.log(fs.statSync(`${__dirname}\\${theFile.tempFilePath}`))
+            
+            // let response;
+
+            if (theFile) {
+                let s3 = new Aws.S3({
+                    useAccelerateEndpoint: true,
+                    accessKeyId: 'AKIAVA7RIL2ZJ4OJ4FOH',
+                    secretAccessKey: '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',
+                    Bucket: "the-dev-rapport"
+                })
+                
+                const param = {
+                    Bucket: 'the-dev-rapport',
+                    Key: `documents/${Date.now()}__${theFile.name}`,
+                    Body: fs.readFileSync(`${__dirname}\\${theFile.tempFilePath}`),
+                    // Body: `./tmp/1. What You Will Learn in Level 1.mp4`,
+                    ContentType: theFile.mimetype,
+                    ACL: 'public-read'
+                }
+                
+
+                
+                // const reading = fs.statSync(`${__dirname}\\${theFile.tempFilePath}`)
+                
+                // if (theFile.size === reading.size) {
+                    
+                    await s3.upload(param, (err, data) => {
+                        if (err) {
+                            console.log(err)
+                            return res.status(400).json({
+                                success: true,
+                                Error: err
+                            })
+                        } else {
+                            const newObj = {...data, type: theFile.mimetype, originalName: theFile.name, size: theFile.size}
+                            fs.unlinkSync(`${__dirname}\\${theFile.tempFilePath}`)
+                            console.log('data =:> ', newObj)
+                            return res.status(200).json({
+                                success: true,
+                                file: newObj
+                            })
+                        }
+                    })
+                    
+                // }
+                // console.log(res)
+            }
+        }
+        
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            err
+        })
+    }
 });
 
 app.post('/upload', (req, res) => {
     if (res.files === null) {
         return res.status(400).json({msg: "no file was uploaded"})
     }
-
+    
     const file = req.files.file
-
+    
     console.log(file)
-
-    file.mv(path.join(__dirname, 'client', 'public', 'FILES', `${file.name}`), (err) => { // `${__dirname}/client/build/FILES/${file.name}`
+    
+    file.mv(path.join(__dirname, 'FILES', `${file.name}`), (err) => { // `${__dirname}/client/build/FILES/${file.name}`
         if (err) {
             console.error(err)
             return res.status(500).send(err)
@@ -141,10 +287,14 @@ app.post('/upload', (req, res) => {
 app.get('/courses', courseController.getallCourses);
 app.get('/course/:id', courseController.getCourse);
 app.post('/course', courseController.createCourse);
+app.get('/course/course-lesson/:id', courseController.getCourselessonsbyCourseId);
+app.patch('/course/edit/:id', courseController.editCourseDetails);
 app.patch('/course/course-materials/:id', courseController.addCourseMaterialbyCourseId);
 app.patch('/course/course-lessons/:id', courseController.addCourselessonsbyCourseId);
 app.patch('/course/course-faq/:id', courseController.addCoursefaqsbyCourseId);
 app.patch('/course/course-learn/:id', courseController.addCourseLearnbyCourseId);
+app.post('/delete/course-file', courseController.deleteCourseFileS3);
+app.post('/delete/lesson-file', courseController.deleteLessonFileS3);
 
 //! serve static assets in production
 
@@ -155,12 +305,6 @@ if (process.env.NODE_ENV === 'production') {
     app.get('*', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
     });
-
-    if (fs.existsSync(`${__dirname}/client/build/FILES`)) {
-        fs.mkdirSync(`${__dirname}/client/build/FILES/coverimages`)
-        fs.mkdirSync(`${__dirname}/client/build/FILES/materials`)
-    }
-
 }
 if (process.env.NODE_ENV === 'development') {
     //* set static folder

@@ -41,8 +41,8 @@ const Lessons = ({ id, duration, courseMaterials, lessons }) => {
                           <li key={i}>
                               <p className="mb-1"><strong><u>{mat.courseFileTitle ? mat.courseFileTitle : "No material title found"}</u></strong></p>
                               {mat.courseFile && mat.courseFile.map((file, i) => (
-                              <a href="#!" key={i} onClick={() => {file.filepath && window.open(`/${file.filepath}`)}} className="txt_doc d-block mb-2">
-                                  {`${i+1}. ${file.filename}`}
+                              <a key={i} href={file.Location} target="blank" className="txt_doc d-block mb-2">
+                                  {`${i+1}. ${file.originalName}`}
                               </a>))}
                               
                           </li>
@@ -84,9 +84,8 @@ const Lessons = ({ id, duration, courseMaterials, lessons }) => {
                       <ul>
                       { lesson.lessonFile && lesson.lessonFile.length > 0 && lesson.lessonFile.map((file, i) => (
                             <li key={i}>
-                                <Link to={`/view-lesson/${file.filepath}`} data-toggle="modal" data-target=".bd-example-modal-lg" //? file.filepath
-                                className="video" >
-                                    { file.filename }
+                                <Link to={`/view-lesson/${id}/${file.originalName}`} className="video" >
+                                    { file.originalName }
                                 </Link>
                             </li>
                           ))}

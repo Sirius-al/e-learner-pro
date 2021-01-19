@@ -42,6 +42,7 @@ const EditCourse = ({ getCourse, course }) => {
               </ul>
             </div>
           </nav>
+          <Link to={`/edit-course-details/${id}`} className="btn btn-info mt-2">Edit course Details</Link>
           <div className="container margin_60_35">
             <div className="row">
               <div className="col-lg-8">
@@ -51,7 +52,7 @@ const EditCourse = ({ getCourse, course }) => {
                     {!description ? "No description found for this course" : description}
                   </p>
 
-                <h5>What will you learn from this course !</h5>
+                <h5>What will students learn from this course !</h5>
                   {learns && <Fragment>
                     <ul className="list_ok">
                       {learns.length > 0 ? learns.map((learn, i) => {

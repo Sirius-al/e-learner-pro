@@ -3,50 +3,71 @@ import { connect } from 'react-redux'
 
 import Button from '@material-ui/core/Button';
 
-import { uploadlessonsVideos, submitCourseLessons } from '../../../Actions/actions';
+import { uploadlessonsVideos, submitCourseLessons, SetAlert } from '../../../Actions/actions';
 
 
-const Addlessons = ({ id, uploadlessonsVideos, progress, lessonFiles, submitCourseLessons }) => {
+const Addlessons = ({ id, uploadlessonsVideos, progress, lessonFiles, submitCourseLessons, SetAlert }) => {
+
+    const [filesArray, setfilesArray] = useState([])
+    const [lessonName, setlessonName] = useState('')
+
+    
 
 
-    let newMap = new Map()
 
     const upload_Lesson = (e) => {
 
-        function fnc(f) {
-            const formdata = new FormData()
-                formdata.append('file', f)
+        setfilesArray([...filesArray, ...e.target.files])
 
-                // console.log(file)
-                //! const objectURL = URL.createObjectURL(file)
-                // console.log(objectURL)
-                return uploadlessonsVideos(formdata)
-        }
-
-        [...e.target.files].map((file, i) => {
-
-
-            if (progress === 0) {
-                fnc(file)
-            }
-            // console.log(file)
-        })
-
-    }
-
-    if (lessonFiles.length > 0) {
-
-        newMap.set('lessonFile', lessonFiles)
-        /* lessonFiles.map((file, i) => {
-            newMap.get('files').push()
-        }); */
     }
 
     const sendData = () => {
-        const newObj = Object.fromEntries(newMap)
-        // console.log(newObj)
-        submitCourseLessons(id, [newObj])
 
+        let i = 0;
+        const responsedArrayedFiles = []
+            
+        function myLoop() {
+                // console.log(filesLength)
+                
+                setTimeout( async () => {
+                console.log("THE FILE IT_SELF => ", filesArray[i]);
+                const form = new FormData();
+
+                if (filesArray[i] && !filesArray[i].type.includes('video/')) {
+                    i++;
+                    myLoop();
+                    return SetAlert('error', "Only video files are allowed !", 2000)
+                }
+                
+                form.append('courseFile', filesArray[i])
+                    
+                const res = await uploadlessonsVideos(form)
+                console.log("THE RETURNED RESULT => ", res)
+                responsedArrayedFiles.push(res.file)
+                
+                i++;
+                //* keep sending files one after another
+                if (i < filesArray.length && res) { //  && res.status === 200 || res.status === 304
+                    myLoop();
+                }
+                //* If all files are done uploading then run the next step
+                if (i === filesArray.length && res) {
+                    console.log('next step')
+
+                    const newObj = {
+                        lessonFile: responsedArrayedFiles,
+                        lessonTitle: lessonName
+                    }
+                    console.log(newObj)
+
+                    submitCourseLessons(id, newObj)
+                    
+                }
+            }, 1000)
+
+        }
+        
+        myLoop();
     }
 
 
@@ -55,7 +76,7 @@ const Addlessons = ({ id, uploadlessonsVideos, progress, lessonFiles, submitCour
       <div className="card mb-4">
         <div className="card-header">Course Lesson </div>
         <div className="card-body">
-            <input type="text" name="courseFileTitle" className="form-control" id="inputZip" placeholder="Course lesson file title" onChange={e => newMap.set("lessonTitle", e.target.value || '')} />
+            <input type="text" name="courseFileTitle" className="form-control" id="inputZip" placeholder="Course lesson file title" onChange={e => setlessonName(e.target.value)} />
             <br/>
             <Fragment>
                     <input
@@ -69,7 +90,7 @@ const Addlessons = ({ id, uploadlessonsVideos, progress, lessonFiles, submitCour
                         onChange={e => upload_Lesson(e)}
                     />
                     <blockquote className="blockquote">
-                        <footer style={{backgroundColor: 'white'}} className="blockquote-footer">If You have Multiple videos to upload -- <cite title="Source Title"> Upload them one after another, </cite> click (submit course lesson) when you are done</footer>
+                        <footer style={{backgroundColor: 'white'}} className="blockquote-footer">If You are uploading multiple files -- <cite title="Source Title"> don't bother with the progress bar, </cite> <strong> An alert will be shown for each file getting successfully uploaded to S3 Bucket </strong> </footer>
                     </blockquote>
 
                     <label htmlFor="lesson-file-upload" >
@@ -103,4 +124,4 @@ const mapStateToProps = (state) => ({
     lessonFiles: state.datas.lessonFiles
 })
 
-export default connect(mapStateToProps, { uploadlessonsVideos, submitCourseLessons })(Addlessons);
+export default connect(mapStateToProps, { uploadlessonsVideos, submitCourseLessons, SetAlert })(Addlessons);

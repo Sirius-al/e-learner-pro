@@ -1,69 +1,105 @@
 import React, { Fragment, useState } from "react";
 import { connect } from 'react-redux'
 
-import { uploadMaterialfiles, submitCourseMaterial } from '../../../Actions/actions'
+import { uploadMaterialfiles, submitCourseMaterial, SetAlert } from '../../../Actions/actions'
 
 import Button from '@material-ui/core/Button';
 
-const AddMaterials = ({ id, uploadMaterialfiles, materialFiles, m_progress, submitCourseMaterial, files }) => {
+const AddMaterials = ({ id, uploadMaterialfiles, materialFiles, m_progress, submitCourseMaterial, SetAlert, files }) => {
 
+    const [filesArray, setfilesArray] = useState([])
     const [value, setvalue] = useState('')
 
-    let form = new FormData();
+    
+    //!========================================== Functions ==============================================
+    function typeChecker(targated_type, allowedType = ['image']) {
+        const theFileType = targated_type.split('/')[0]
 
-    const inputtedFile = (e) => {
-        
-        function fnc(f) {
-            const formdata = new FormData()
-                formdata.append('file', f)
-
-                // console.log(file)
-                //! const objectURL = URL.createObjectURL(file)
-                // console.log(objectURL)
-                return uploadMaterialfiles(formdata)
+        if (allowedType.indexOf(theFileType) === -1) {
+          return false
+        } else {
+            return true
         }
-
-
-        [...e.target.files].map((file, i) => {
-
-
-            if (m_progress === 0) {
-                fnc(file)
-            }
-            // console.log(file)
-        })
-        // console.log(e)
-        // setvalue({...value, courseFileTitle: e.target.value})
-}
-
-    if (materialFiles.length > 1) {
-        form.append('courseFile', materialFiles)
     }
 
-    function titleHandler(e) {
 
-        setvalue(e.target.value)
-        
+    
+    //!========================================== Important functions ( 1 ) ==============================================
+    //!========================================== Important functions ( 1 ) ==============================================
+    //!========================================== Important functions ( 1 ) ==============================================
+    const inputtedFile = (e) => {
+    
+        setfilesArray([...filesArray, ...e.target.files])
     }
 
+
+    //!========================================== Important functions ( 2 ) ==============================================
+    //!========================================== Important functions ( 2 ) ==============================================
+    //!========================================== Important functions ( 2 ) ==============================================
     const sendData = (e) => {
         e.preventDefault()
 
-        form.append('courseFileTitle', value)
+        let i = 0;
+        const responsedArrayedFiles = []
+            
+        function myLoop() {
+                // console.log(filesLength)
+                
+                setTimeout( async () => {
+                console.log("THE FILE IT_SELF => ", filesArray[i]);
+                const form = new FormData();
 
-        // const newObj = Object.fromEntries(newMap)
-        submitCourseMaterial(id, JSON.stringify({courseFile: materialFiles, courseFileTitle: value}))
+                if (filesArray[i] && typeChecker(filesArray[i].type, ['image', 'video'])) {
+                    i++;
+                    myLoop();
+                    return SetAlert('error', "Only Documantal files are allowed !", 2000)
+                }
+                
+                form.append('courseFile', filesArray[i])
+                    
+                const res = await uploadMaterialfiles(form)
+                console.log("THE RETURNED RESULT => ", res)
 
-        setvalue('')
-        // console.log(id, [newObj])
+                    if (res && res.file !== undefined) {
+                        responsedArrayedFiles.push(res.file)
+                    }
+                
+                i++;
+                //* keep sending files one after another
+                if (i < filesArray.length && res) { //  && res.status === 200 || res.status === 304
+                    myLoop();
+                }
+                //* If all files are done uploading then run the next step
+                if (i === filesArray.length && res) {
+                    console.log('next step')
+
+                    const newObj = {
+                        courseFile: responsedArrayedFiles,
+                        courseFileTitle: value
+                    }
+                    console.log(newObj)
+
+                    submitCourseMaterial(id, newObj)
+
+                    setvalue('')
+                }
+            }, 1000)
+
+        }
+        
+        myLoop();
     }
-   
+
+
+  //**************************************** */ Main Component return statement **************************************************
+  //**************************************** */ Main Component return statement **************************************************
+  //**************************************** */ Main Component return statement **************************************************
   return (
     <div>
       <div className="card mb-4">
         <div className="card-header">Course Material </div>
             <div className="card-body">
-                <input type="text" name="courseFileTitle" className="form-control" id="inputZip" placeholder="Course material file title" value={value} onChange={e => titleHandler(e)}
+                <input type="text" name="courseFileTitle" className="form-control" id="inputZip" placeholder="Course material file title" value={value} onChange={e => setvalue(e.target.value)}
                     />
                 <br/>
                 <input
@@ -105,4 +141,4 @@ const mapStateToProps = (state) => ({
     files: state.datas.material_files
 })
 
-export default connect(mapStateToProps, { uploadMaterialfiles, submitCourseMaterial })(AddMaterials);
+export default connect(mapStateToProps, { uploadMaterialfiles, submitCourseMaterial, SetAlert })(AddMaterials);

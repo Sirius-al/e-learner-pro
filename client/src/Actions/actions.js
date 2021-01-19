@@ -1,4 +1,4 @@
-import { FILE_UPLOADER, COURSE_BASIC_UPLOADED, GET_ALL_COURSES, COURSE_MATERIAL_UPLOADED, COURSE_LESSONS_UPLOADED, COURSE_FAQ_UPLOADED, GET_COURSE, COURSE_LEARN_UPLOADED, LESSON_VIDEO_UPLOADER, LESSON_ERROR, PROGRESS, PROGRESS2, MATERIAL_FILE_UPLOADER, SET_ALERT, REMOVE_ALERT, CERIFICATE_IMAGE_UPLOADED } from './types'
+import { FILE_UPLOADER, COURSE_BASIC_UPLOADED, GET_ALL_COURSES, COURSE_MATERIAL_UPLOADED, COURSE_LESSONS_UPLOADED, COURSE_FAQ_UPLOADED, GET_COURSE, COURSE_LEARN_UPLOADED, LESSON_VIDEO_UPLOADER, LESSON_ERROR, PROGRESS, PROGRESS2, MATERIAL_FILE_UPLOADER, SET_ALERT, REMOVE_ALERT, CERIFICATE_IMAGE_UPLOADED, COURSEFILE_DELETED, GET_COURSE_LESSONS, LESSONFILE_DELETED, COURSE_UPDATED, COURSE_UPDATED_ERROR } from './types'
 import backendCall from '../utils/backendCall'
 import { v4 } from 'uuid'
 import axios from 'axios'
@@ -43,7 +43,7 @@ export const uploadCoverImage = (file) => async dispatch => {
                 "Content-Type": "multipart/form-data"
             }
         }) 
-        dispatch({ type: FILE_UPLOADER, payload: res.data })
+        dispatch({ type: FILE_UPLOADER, payload: res.data.file })
         dispatch(SetAlert('success', "Cover Image Uploaded !"))
         console.log(res.data)
     } catch (err) {
@@ -100,9 +100,10 @@ export const uploadMaterialfiles = (file, ) => async dispatch => {
         dispatch({ type: MATERIAL_FILE_UPLOADER, payload: res.data })
         dispatch(SetAlert('info', "Course Material File Uploaded"))
         console.log(res.data)
+        return res.data
     } catch (err) {
         const error = err.response
-        dispatch(SetAlert('danger', "Course Material File uploading Failed ! PLease try again"))
+        dispatch(SetAlert('Error', "Course Material File uploading Failed ! PLease try again"))
         console.error(error)
         
     }
@@ -116,7 +117,7 @@ export let fileUploadProgress = (value, prog_type) => async dispatch => {
 
 export const uploadlessonsVideos = (file) => async dispatch => {
     try {
-        const res = await backendCall.post('/upload', file, {
+        const res = await backendCall.post('/upload/lessons', file, {
             headers: {
                 "Content-Type": "multipart/form-data"
             },
@@ -132,18 +133,89 @@ export const uploadlessonsVideos = (file) => async dispatch => {
                 dispatch(fileUploadProgress(progress, PROGRESS))
             }
         })
-        dispatch({ type: LESSON_VIDEO_UPLOADER, payload: res.data })
+        dispatch({ type: LESSON_VIDEO_UPLOADER, payload: res.data.file })
         dispatch(SetAlert('success', "Lesson's Video Uploaded !"))
         console.log(res.data)
+        return res.data
     } catch (err) {
         dispatch({ type: LESSON_ERROR })
-        dispatch(SetAlert('danger', "lesson's video uploading failed ! PLease try again"))
+        dispatch(SetAlert('Error', "lesson's video uploading failed ! PLease try again"))
         // const error = err.response
         console.error(err)
         
         
     }
-  }
+}
+
+
+export const deleteCourseFile = (fileDoc, courseId, material_files_id) => async dispatch => {
+    try {
+        const res = await backendCall.post('/delete/course-file', { fileDoc, id: courseId, mat_id: material_files_id} )
+        
+        dispatch({ type: COURSEFILE_DELETED, payload: res.data.course })
+        dispatch(SetAlert('success', "File SuccessFully deleted"))
+        console.log(res.data)
+        return res.data
+    } catch (err) {
+        dispatch({ type: LESSON_ERROR })
+        dispatch(SetAlert('Error', "Course's File Deletion failed ! PLease try again"))
+        // const error = err.response
+        console.error(err)
+            
+    }
+}
+
+
+export const updateCourse = (docs, id) => async dispatch => {
+    try {
+        const res = await backendCall.patch(`/course/edit/${id}`, docs )
+        
+        dispatch({ type: COURSE_UPDATED, payload: res.data.course })
+        dispatch(SetAlert('success', "Course SuccessFully Updated !"))
+        console.log(res.data)
+        return res.data
+    } catch (err) {
+        dispatch({ type: COURSE_UPDATED_ERROR, payload: err.response})
+        dispatch(SetAlert('Error', "Course's Update failed ! PLease try again !"))
+        // const error = err.response
+        console.error(err)
+    }
+}
+
+
+export const deleteLessonFile = (fileDoc, courseId, lesson_files_id) => async dispatch => {
+    try {
+        const res = await backendCall.post('/delete/lesson-file', { fileDoc, id: courseId, les_id: lesson_files_id} )
+        
+        dispatch({ type: LESSONFILE_DELETED, payload: res.data.course })
+        dispatch(SetAlert('success', "File SuccessFully deleted"))
+        console.log(res.data)
+        return res.data
+    } catch (err) {
+        dispatch({ type: LESSON_ERROR })
+        dispatch(SetAlert('Error', "lesson's File Deletion failed ! PLease try again"))
+        // const error = err.response
+        console.error(err)
+            
+    }
+}
+
+
+export const getCourseLessonsByCourseId = (id) => async dispatch => {
+    try {
+        const res = await backendCall.get(`/course/course-lesson/${id}`)
+        
+        dispatch({ type: GET_COURSE_LESSONS, payload: res.data.lessons })
+        // console.log(res.data)
+        return res.data
+    } catch (err) {
+        dispatch({ type: LESSON_ERROR })
+        dispatch(SetAlert('Error', "something is going wrong. Please try refreshing the page !"))
+        // const error = err.response
+        console.error(err)
+            
+    }
+}
 
 export const submitCourseBasics = (data) => async dispatch => {
     try {
@@ -170,7 +242,7 @@ export const submitCourseBasics = (data) => async dispatch => {
 
 export const submitCourseMaterial = (id, data) => async dispatch => {
     try {
-        const res = await backendCall.patch(`/course/course-materials/${id}`, JSON.parse(data), {
+        const res = await backendCall.patch(`/course/course-materials/${id}`, data, {
             headers: {
                 "Content-Type": "application/json"
             }
@@ -207,7 +279,7 @@ export const submitCourseMaterial = (id, data) => async dispatch => {
         
     } catch (err) {
         const error = err.response
-        dispatch(SetAlert('danger', "course lessons submisson failed Please refresh the page"))
+        dispatch(SetAlert('error', "course lessons submisson failed Please refresh the page"))
         console.error(error)
         // dispatch({
         //   type: PROFILE_ERROR,
