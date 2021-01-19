@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const Aws = require('aws-sdk');
 // const cookieParser = require('cookie-parser');
 
@@ -20,8 +21,10 @@ app.use(express.json())
 
 app.use(fileupload({
     useTempFiles: true,
-    tempFileDir: "./tmp"
+    tempFileDir: path.join(__dirname, 'tmp')
 }))
+
+console.log(os.tmpdir())
 
 dotenv.config({
     path: path.resolve(__dirname, '.env')
