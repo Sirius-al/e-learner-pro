@@ -97,7 +97,7 @@ app.post('/upload/coverimage', async (req, res, next) => {
                 const param = {
                     Bucket: 'the-dev-rapport',
                     Key: `images/${Date.now()}__${theFile.name}`,
-                    Body: fs.readFileSync(`${__dirname}\\${theFile.tempFilePath}`),
+                    Body: fs.readFileSync(`${__dirname}/app\\${theFile.tempFilePath}`),
                     ContentType: theFile.mimetype,
                     ACL: 'public-read'
                 }

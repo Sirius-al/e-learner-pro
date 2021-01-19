@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 export default axios.create({
-    baseURL: 'https://e-learner-pro.herokuapp.com'
+    baseURL: 'http://localhost:5000'
 })
 
 //* https://e-learner-pro.herokuapp.com
