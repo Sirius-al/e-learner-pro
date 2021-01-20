@@ -9,7 +9,7 @@ const os = require('os');
 const Aws = require('aws-sdk');
 // const cookieParser = require('cookie-parser');
 
-
+console.log('__dirname => ', __dirname)
 
 const courseController = require('./Controller/courseController');
 
