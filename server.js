@@ -21,7 +21,7 @@ app.use(express.json())
 
 app.use(fileupload({
     useTempFiles: true,
-    tempFileDir: "./tmp"
+    tempFileDir: path.join(__dirname, 'tmp')
 }))
 
 dotenv.config({
@@ -112,7 +112,7 @@ app.post('/upload/coverimage', async (req, res, next) => {
                             })
                         } else {
                             const newObj = {...data, type: theFile.mimetype, originalName: theFile.name, size: theFile.size}
-                            fs.unlinkSync(`./\\${theFile.tempFilePath}`)
+                            fs.unlinkSync(`${__dirname}\\${theFile.tempFilePath}`)
                             console.log('data =:> ', newObj)
                             return res.status(200).json({
                                 success: true,
@@ -307,7 +307,7 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
     });
 
-    var dir = './tmp';
+    var dir = path.join(__dirname, 'tmp');
 
     if (!fs.existsSync(dir)){
         fs.mkdirSync(dir);
