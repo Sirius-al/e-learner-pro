@@ -43,7 +43,7 @@ const Addlessons = ({ id, uploadlessonsVideos, progress, lessonFiles, submitCour
                     
                 const res = await uploadlessonsVideos(form)
                 console.log("THE RETURNED RESULT => ", res)
-                responsedArrayedFiles.push(res.file)
+                responsedArrayedFiles.push(res && res.file)
                 
                 i++;
                 //* keep sending files one after another

@@ -21,10 +21,8 @@ app.use(express.json())
 
 app.use(fileupload({
     useTempFiles: true,
-    tempFileDir: path.join(__dirname, 'tmp')
+    tempFileDir: "./tmp"
 }))
-
-console.log(os.tmpdir())
 
 dotenv.config({
     path: path.resolve(__dirname, '.env')
@@ -100,7 +98,7 @@ app.post('/upload/coverimage', async (req, res, next) => {
                 const param = {
                     Bucket: 'the-dev-rapport',
                     Key: `images/${Date.now()}__${theFile.name}`,
-                    Body: fs.readFileSync(`${__dirname}/app\\${theFile.tempFilePath}`),
+                    Body: fs.readFileSync(`${__dirname}\\${theFile.tempFilePath}`),
                     ContentType: theFile.mimetype,
                     ACL: 'public-read'
                 }
@@ -308,6 +306,12 @@ if (process.env.NODE_ENV === 'production') {
     app.get('*', (req, res) => {
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
     });
+
+    var dir = './tmp';
+
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+    }
 }
 if (process.env.NODE_ENV === 'development') {
     //* set static folder
