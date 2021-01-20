@@ -98,7 +98,7 @@ app.post('/upload/coverimage', async (req, res, next) => {
                 const param = {
                     Bucket: 'the-dev-rapport',
                     Key: `images/${Date.now()}__${theFile.name}`,
-                    Body: fs.readFileSync(`${__dirname}\\${theFile.tempFilePath}`),
+                    Body: fs.readFileSync(path.join(__dirname, theFile.tempFilePath)),
                     ContentType: theFile.mimetype,
                     ACL: 'public-read'
                 }
@@ -112,7 +112,7 @@ app.post('/upload/coverimage', async (req, res, next) => {
                             })
                         } else {
                             const newObj = {...data, type: theFile.mimetype, originalName: theFile.name, size: theFile.size}
-                            fs.unlinkSync(`${__dirname}\\${theFile.tempFilePath}`)
+                            fs.unlinkSync(path.join(__dirname, theFile.tempFilePath))
                             console.log('data =:> ', newObj)
                             return res.status(200).json({
                                 success: true,
