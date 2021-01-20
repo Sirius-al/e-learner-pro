@@ -96,7 +96,7 @@ app.post('/upload/coverimage', async (req, res, next) => {
                 })
 
                 const body = fs.readFileSync(theFile.tempFilePath)
-                console.log(body)
+                // console.log(body)
                 
                 const param = {
                     Bucket: 'the-dev-rapport',
@@ -105,7 +105,7 @@ app.post('/upload/coverimage', async (req, res, next) => {
                     ContentType: theFile.mimetype,
                     ACL: 'public-read'
                 }
-                    console.log(theFile.tempFilePath)
+                    // console.log(theFile.tempFilePath)
 
                     await s3.upload(param, (err, data) => {
                         if (err) {
@@ -156,10 +156,12 @@ app.post('/upload/lessons', async (req, res, next) => {
                     Bucket: "the-dev-rapport"
                 })
 
+                const body = fs.readFileSync(theFile.tempFilePath)
+
                 const param = {
                     Bucket: 'the-dev-rapport',
                     Key: `${Date.now()}__${theFile.name}`,
-                    Body: fs.readFileSync(`./\\${theFile.tempFilePath}`),
+                    Body: body,
                     // Body: `./tmp/1. What You Will Learn in Level 1.mp4`,
                     ContentType: theFile.mimetype,
                     ACL: 'public-read'
@@ -180,7 +182,7 @@ app.post('/upload/lessons', async (req, res, next) => {
                             })
                         } else {
                             const newObj = {...data, type: theFile.mimetype, originalName: theFile.name, size: theFile.size}
-                            fs.unlinkSync(`./\\${theFile.tempFilePath}`)
+                            fs.unlinkSync(theFile.tempFilePath)
                             console.log('data =:> ', newObj)
                             return res.status(200).json({
                                 success: true,
@@ -221,11 +223,13 @@ app.post('/upload/materials', async (req, res, next) => {
                     secretAccessKey: 'BuINQr1P0gDQSc2JIiqXgKMVTJoHCprJAI3xXpnd',
                     Bucket: "the-dev-rapport"
                 })
+
+                const body = fs.readFileSync(theFile.tempFilePath)
                 
                 const param = {
                     Bucket: 'the-dev-rapport',
                     Key: `documents/${Date.now()}__${theFile.name}`,
-                    Body: fs.readFileSync(`./\\${theFile.tempFilePath}`),
+                    Body: body,
                     // Body: `./tmp/1. What You Will Learn in Level 1.mp4`,
                     ContentType: theFile.mimetype,
                     ACL: 'public-read'
@@ -246,7 +250,7 @@ app.post('/upload/materials', async (req, res, next) => {
                             })
                         } else {
                             const newObj = {...data, type: theFile.mimetype, originalName: theFile.name, size: theFile.size}
-                            fs.unlinkSync(`./\\${theFile.tempFilePath}`)
+                            fs.unlinkSync(theFile.tempFilePath)
                             console.log('data =:> ', newObj)
                             return res.status(200).json({
                                 success: true,
