@@ -21,7 +21,7 @@ app.use(express.json())
 
 app.use(fileupload({
     useTempFiles: true,
-    tempFileDir: path.join(__dirname, 'tmp')
+    tempFileDir: path.resolve(__dirname, 'tmp')
 }))
 
 dotenv.config({
@@ -95,7 +95,8 @@ app.post('/upload/coverimage', async (req, res, next) => {
                     Bucket: "the-dev-rapport"
                 })
 
-                const body = fs.readFileSync(path.join(__dirname, theFile.tempFilePath))
+                const body = fs.readFileSync(theFile.tempFilePath)
+                console.log(body)
                 
                 const param = {
                     Bucket: 'the-dev-rapport',
@@ -104,17 +105,19 @@ app.post('/upload/coverimage', async (req, res, next) => {
                     ContentType: theFile.mimetype,
                     ACL: 'public-read'
                 }
-                    
+                    console.log(theFile.tempFilePath)
+
                     await s3.upload(param, (err, data) => {
                         if (err) {
                             console.log(err)
                             return res.status(400).json({
                                 success: true,
+                                msg: 'while uploading',
                                 Error: err
                             })
                         } else {
                             const newObj = {...data, type: theFile.mimetype, originalName: theFile.name, size: theFile.size}
-                            fs.unlinkSync(path.join(__dirname, theFile.tempFilePath))
+                            fs.unlinkSync(theFile.tempFilePath)
                             console.log('data =:> ', newObj)
                             return res.status(200).json({
                                 success: true,
@@ -309,7 +312,7 @@ if (process.env.NODE_ENV === 'production') {
         res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
     });
 
-    var dir = path.join(__dirname, 'tmp');
+    var dir = path.resolve(__dirname, './tmp');
 
     if (!fs.existsSync(dir)){
         fs.mkdirSync(dir);
