@@ -94,11 +94,13 @@ app.post('/upload/coverimage', async (req, res, next) => {
                     secretAccessKey: 'BuINQr1P0gDQSc2JIiqXgKMVTJoHCprJAI3xXpnd',
                     Bucket: "the-dev-rapport"
                 })
+
+                const body = fs.readFileSync(path.join(__dirname, theFile.tempFilePath))
                 
                 const param = {
                     Bucket: 'the-dev-rapport',
                     Key: `images/${Date.now()}__${theFile.name}`,
-                    Body: fs.readFileSync(path.join(__dirname, theFile.tempFilePath)),
+                    Body: body,
                     ContentType: theFile.mimetype,
                     ACL: 'public-read'
                 }
