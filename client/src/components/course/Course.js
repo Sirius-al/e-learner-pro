@@ -171,7 +171,7 @@ const Course = ({ getCourse, course }) => {
             <div className="row mt-4">
                 <div className="col-lg-12 text-center">
                 <h4 className='mb-4'><strong>Tags</strong></h4>
-                    {catagory && catagory.tags.length  ? catagory.tags.map((item, i) => <h5 className="d-inline ml-2">
+                    {catagory && catagory.tags && ? catagory.tags.map((item, i) => <h5 className="d-inline ml-2">
                       <span class="badge badge-dark">{item}</span></h5>) : "No Tags Yet"}
                 </div>
             </div>
