@@ -21,7 +21,7 @@ const Course = ({ getCourse, course }) => {
     getCourse(id)
   }, [])
 
-  const { _id, title, teacher, description, discountPerc, requirements, duration, coverImage, level, price, learns, courseMaterials, lessons, faq } = course
+  const { _id, title, teacher, description, discountPerc, requirements, duration, coverImage, level, price, learns, courseMaterials, lessons, faq, catagory} = course
 
     return (
       <main>
@@ -166,6 +166,13 @@ const Course = ({ getCourse, course }) => {
                 <div className="col-lg-8">
                 <h4 className='mb-4'><strong>F.A.Q</strong></h4>
                     {faq && faq.length > 0 ? faq.map((item, i) => <Faq faq={item} key={i} i={i} />) : "No Faq"}
+                </div>
+            </div>
+            <div className="row mt-4">
+                <div className="col-lg-12 text-center">
+                <h4 className='mb-4'><strong>Tags</strong></h4>
+                    {catagory && catagory.tags.length  ? catagory.tags.map((item, i) => <h5 className="d-inline ml-2">
+                      <span class="badge badge-dark">{item}</span></h5>) : "No Tags Yet"}
                 </div>
             </div>
             {/* /row */}

@@ -2,6 +2,7 @@ import React, { Fragment, useState } from "react";
 import { connect } from 'react-redux'
 
 import Button from '@material-ui/core/Button';
+import DropZone from '../../mainformPart/DropZone';
 
 import { uploadlessonsVideos, submitCourseLessons, SetAlert } from '../../../Actions/actions';
 
@@ -17,7 +18,8 @@ const Addlessons = ({ id, uploadlessonsVideos, progress, lessonFiles, submitCour
 
     const upload_Lesson = (e) => {
 
-        setfilesArray([...filesArray, ...e.target.files])
+        // setfilesArray([...filesArray, ...e.target.files])
+        setfilesArray([...filesArray, ...e])
 
     }
 
@@ -78,26 +80,14 @@ const Addlessons = ({ id, uploadlessonsVideos, progress, lessonFiles, submitCour
         <div className="card-body">
             <input type="text" name="courseFileTitle" className="form-control" id="inputZip" placeholder="Course lesson file title" onChange={e => setlessonName(e.target.value)} />
             <br/>
-            <Fragment>
-                    <input
-                        accept=".mp4, .wav" // video/*
-                        id="lesson-file-upload"
-                        type="file"
-                        style={{display: 'none'}}
-                        name="courseFileName"
-                        multiple
-                        disabled={progress > 0}
-                        onChange={e => upload_Lesson(e)}
-                    />
+                
+                <Fragment>
                     <blockquote className="blockquote">
                         <footer style={{backgroundColor: 'white'}} className="blockquote-footer">If You are uploading multiple files -- <cite title="Source Title"> don't bother with the progress bar, </cite> <strong> An alert will be shown for each file getting successfully uploaded to S3 Bucket </strong> </footer>
                     </blockquote>
 
-                    <label htmlFor="lesson-file-upload" >
-                        <Button disabled={progress > 0} variant="contained" color="primary" component="span">
-                            Upload Lesson file
-                        </Button>
-                    </label>
+                    <DropZone Multi innerText='Drop All Videos Here' acceptableFiles=".mp4" getFiles={files => upload_Lesson(files)} />
+
                     <p style={{display: 'block', marginTop: "10px"}}> <strong style={{overflowX: 'clip'}} >{lessonFiles && lessonFiles.length > 0 ? `Uploaded Files ==> ${lessonFiles.map(file => file.filename).join(', ')}` : "lesson file"}</strong> </p>
                 </Fragment>
 

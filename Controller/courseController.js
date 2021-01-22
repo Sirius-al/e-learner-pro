@@ -8,7 +8,7 @@ exports.createCourse = async (req, res, next) => {
       const initialCourse = {
         title: req.body.title,
         teacher: req.body.teacher,
-        catagory: req.body.catagory.split(','),
+        catagory: req.body.catagory,
         description: req.body.description,
         duration: req.body.duration,
         coverImage: req.body.coverImage,

@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 
 import { getAllCourses } from './Actions/actions'
 
+import Dropzone from './components/mainformPart/DropZone'
 import MainFormPart from './components/MainFormPart'
 import AddLearns from './components/edit-course/addLearns'
 import AddFaq from './components/edit-course/AddFaq'
@@ -43,6 +44,8 @@ const App = ({ getAllCourses, courses }) => {
           </Route>
 
           <Switch>
+            <Route path='/experimental' component={Dropzone}/>
+
             <Route path='/add-learns/:id' component={AddLearns}/>
             <Route path='/add-lessons/:id' component={AddLessonsAndMaterials}/>
             <Route path='/add-faq/:id' component={AddFaq}/>

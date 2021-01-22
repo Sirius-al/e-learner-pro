@@ -10,6 +10,8 @@ import Button from '@material-ui/core/Button';
 import Select from 'react-select';
 import CreatableSelect from 'react-select/creatable';
 
+import Category from './mainformPart/Category'
+
 import { submitCourseBasics, uploadCoverImage, SetAlert } from '../Actions/actions'
 
 
@@ -18,7 +20,7 @@ const MainFormPart = ({ submitCourseBasics, uploadCoverImage, files, SetAlert })
   // console.log(_. isEmpty(files))
 
   const [title, settitle] = useState('')
-  const [catagory, setcatagory] = useState('')
+  const [catagory, setcatagory] = useState({})
   const [description, setdescription] = useState('')
   const [duration, setduration] = useState('')
   const [teacher, setteacher] = useState('')
@@ -53,7 +55,7 @@ const MainFormPart = ({ submitCourseBasics, uploadCoverImage, files, SetAlert })
   
       setTimeout(() => {
         
-        settitle(''); setcatagory(''); setdescription(''); setduration(''); setteacher(''); setcoverImage(''); setcoverImageData({}); setlevel(''); setrequirements(''); setprice(0); setdiscountPerc(0);
+        settitle(''); setcatagory({}); setdescription(''); setduration(''); setteacher(''); setcoverImage(''); setcoverImageData({}); setlevel(''); setrequirements(''); setprice(0); setdiscountPerc(0);
         
         setuploading(false)
       }, 1000)
@@ -69,20 +71,7 @@ const MainFormPart = ({ submitCourseBasics, uploadCoverImage, files, SetAlert })
     return submition2(files)
 
   }
-  
-  
-  const SelectOptions = [
-    { value: 'HTML', label: 'HTML' },
-    { value: 'HTML 5', label: 'HTML 5' },
-    { value: 'CSS 3', label: 'CSS 3' },
-    { value: 'CSS', label: 'CSS' },
-    { value: 'JavaScript', label: 'JavaScript' },
-    { value: 'PHP', label: 'PHP' },
-    { value: '.net', label: '.net' },
-    { value: 'Node JS', label: 'Node JS' },
-    { value: 'React Js', label: 'React Js' },
-    { value: 'Laravel', label: 'Laravel' },
-  ]
+
   const LevelOptions = [
     { value: 'Beginners', label: 'Beginners' },
     { value: 'Intermediate', label: 'Intermediate' },
@@ -90,10 +79,7 @@ const MainFormPart = ({ submitCourseBasics, uploadCoverImage, files, SetAlert })
   ]
 
 
-  const handleChange = (newValue, actionMeta) => {
-    const value = newValue?.map(value => value.value).toString();
-    setcatagory(value)
-  };
+
   const handleChange2 = (newValue, actionMeta) => {
     setlevel(newValue.value);
   };
@@ -126,10 +112,6 @@ const MainFormPart = ({ submitCourseBasics, uploadCoverImage, files, SetAlert })
             <input type="text" className="form-control" id="inputEmail4" placeholder="Put your course's Title" name='title' value={title} onChange={e => settitle(e.target.value)} />
           </div>
         <div className="form-row">
-          <div className="form-group col-md-3">
-            <label htmlFor="inputAddress">Teacher</label>
-            <input type="text" className="form-control" name='teacher'  id="inputAddress" placeholder="Ex: Nafiz Al din" value={teacher} onChange={e => setteacher(e.target.value)} />
-          </div>
           <div className="form-group col-md-3" style={{marginTop: '30px', textAlign: 'center'}}>
             <input
                 accept="image/*"
@@ -145,7 +127,7 @@ const MainFormPart = ({ submitCourseBasics, uploadCoverImage, files, SetAlert })
                   </Button>
               </label>
           </div>
-          <div className="form-group col-md-6" style={{marginTop: '30px'}}>
+          <div className="form-group col-md-9" style={{marginTop: '30px'}}>
             {coverImage === '' ? (<p> <strong>Select a Cover Image For your Course</strong></p>) : (
               <div className="card bg-dark text-white">
                 <img src={coverImage} className="card-img" alt="..." />
@@ -159,21 +141,21 @@ const MainFormPart = ({ submitCourseBasics, uploadCoverImage, files, SetAlert })
           </div>
         </div>
         <div className="form-row">
-          <div className="form-group col-md-5">
-            <label htmlFor="inputCity">Course Catagory</label>
-            <CreatableSelect id="inputCity"
-              isClearable isMulti
-              placeholder="Course Catagories"
-              defaultInputValue={''}
-              onChange={handleChange}
-              options={SelectOptions}
-            />
+          <div className="form-group col-md-12">
+            <label htmlFor="Catagory">Course Catagory</label>
+            <Category id="Catagory" sendProps={obj => setcatagory(obj)} />
+          </div>
+        </div>
+        <div className="form-row">
+          <div className="form-group col-md-3">
+            <label htmlFor="inputAddress">Teacher</label>
+            <input type="text" className="form-control" name='teacher'  id="inputAddress" placeholder="Ex: Nafiz Al din" value={teacher} onChange={e => setteacher(e.target.value)} />
           </div>
           <div className="form-group col-md-2">
             <label htmlFor="inputState">course Price</label>
             <input type="number" name="price"  className="form-control" id="inputState" placeholder="course's Price" value={price} onChange={e => setprice(e.target.value)} />
           </div>
-          <div className="form-group col-md-2">
+          <div className="form-group col-md-4">
             <label htmlFor="inputZip">course duration</label>
             <input type="text" name="duration" value={duration}  className="form-control" id="inputZip" placeholder="3 hrs - 45 mins" onChange={e => setduration(e.target.value)} />
           </div>
@@ -182,7 +164,7 @@ const MainFormPart = ({ submitCourseBasics, uploadCoverImage, files, SetAlert })
             <label htmlFor="level">Level of expertise</label>
             <Select id="level"
               // defaultValue={colourOptions[2]}
-              placeholder="Course's Catagory"
+              placeholder="Course's Skill set requirement"
               options={LevelOptions}
               defaultInputValue={''}
               onChange={handleChange2}

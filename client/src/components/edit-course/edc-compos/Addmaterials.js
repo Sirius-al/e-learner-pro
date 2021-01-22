@@ -5,6 +5,8 @@ import { uploadMaterialfiles, submitCourseMaterial, SetAlert } from '../../../Ac
 
 import Button from '@material-ui/core/Button';
 
+import DropZone from '../../mainformPart/DropZone';
+
 const AddMaterials = ({ id, uploadMaterialfiles, materialFiles, m_progress, submitCourseMaterial, SetAlert, files }) => {
 
     const [filesArray, setfilesArray] = useState([])
@@ -29,7 +31,8 @@ const AddMaterials = ({ id, uploadMaterialfiles, materialFiles, m_progress, subm
     //!========================================== Important functions ( 1 ) ==============================================
     const inputtedFile = (e) => {
     
-        setfilesArray([...filesArray, ...e.target.files])
+        // setfilesArray([...filesArray, ...e.target.files])
+        setfilesArray([...filesArray, ...e])
     }
 
 
@@ -102,23 +105,18 @@ const AddMaterials = ({ id, uploadMaterialfiles, materialFiles, m_progress, subm
                 <input type="text" name="courseFileTitle" className="form-control" id="inputZip" placeholder="Course material file title" value={value} onChange={e => setvalue(e.target.value)}
                     />
                 <br/>
-                <input
-                    accept=".pdf, .docx, .doc"
-                    id="contained-button-file"
-                    type="file"
-                    style={{display: 'none'}}
-                    name="courseFileName"
-                    multiple
-                    onChange={inputtedFile}
-                />
+
                 <blockquote className="blockquote">
                     <footer style={{backgroundColor: 'white'}} className="blockquote-footer">Upload file ( .pdf, .docx, .doc )</footer>
                 </blockquote>
-                <label htmlFor="contained-button-file">
-                    <Button variant="contained" color="primary" component="span">
-                        Upload file
-                    </Button>
-                </label>
+
+                <DropZone 
+                    Multi 
+                    innerText='Drop All Material Files Here' 
+                    acceptableFiles=".pdf, .docx, .doc" 
+                    getFiles={files => inputtedFile(files)}
+                />
+
                 <p style={{display: 'block', marginTop: "10px", marginBottom: "5px"}}> <strong style={{overflowX: 'clip'}} >{materialFiles && materialFiles.length > 0 ? `Uploaded Files ==> ${materialFiles.map(file => file.filename).join(', ')}` : "Course material file"}</strong> </p>
             </div>
             {m_progress && m_progress > 0 ? (<Fragment>

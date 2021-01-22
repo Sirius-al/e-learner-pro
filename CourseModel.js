@@ -8,7 +8,7 @@ const CourseSchema = new mongoose.Schema({
     },
     teacher: String,
     catagory: {
-        type: [String]
+        type: Object
     },
     description: String,
     duration: {
